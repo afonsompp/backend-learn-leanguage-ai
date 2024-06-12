@@ -5,8 +5,7 @@ import { AwsModule } from './shared/aws/aws.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: '.env',
+      ignoreEnvFile: true,
     }),
     AwsModule,
   ],

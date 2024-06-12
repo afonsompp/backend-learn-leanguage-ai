@@ -1,36 +1,45 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { S3Client } from '@aws-sdk/client-s3';
 import { BedrockRuntimeClient } from '@aws-sdk/client-bedrock-runtime';
+import awsConfig from './config/aws.config';
+import { AwsConfigService } from './config/aws.config.service';
+import { BedrockModule } from './bedrock/bedrock.module';
 
 @Module({
-  imports: [ConfigModule],
+  imports: [
+    ConfigModule.forRoot({
+      load: [awsConfig],
+    }),
+    BedrockModule,
+  ],
   providers: [
+    AwsConfigService,
     {
       provide: S3Client,
-      useFactory: (configService: ConfigService) => {
+      useFactory: (configService: AwsConfigService) => {
         return new S3Client({
-          region: configService.get<string>('AWS_REGION'),
+          region: configService.awsRegion,
           credentials: {
-            accessKeyId: configService.get<string>('AWS_ACCESS_KEY_ID'),
-            secretAccessKey: configService.get<string>('AWS_SECRET_ACCESS_KEY'),
+            accessKeyId: configService.awsAccessKeyId,
+            secretAccessKey: configService.awsSecretAccessKey,
           },
         });
       },
-      inject: [ConfigService],
+      inject: [AwsConfigService],
     },
     {
       provide: BedrockRuntimeClient,
-      useFactory: (configService: ConfigService) => {
+      useFactory: (configService: AwsConfigService) => {
         return new BedrockRuntimeClient({
-          region: configService.get<string>('AWS_REGION'),
+          region: configService.awsRegion,
           credentials: {
-            accessKeyId: configService.get<string>('AWS_ACCESS_KEY_ID'),
-            secretAccessKey: configService.get<string>('AWS_SECRET_ACCESS_KEY'),
+            accessKeyId: configService.awsAccessKeyId,
+            secretAccessKey: configService.awsSecretAccessKey,
           },
         });
       },
-      inject: [ConfigService],
+      inject: [AwsConfigService],
     },
   ],
   exports: [S3Client, BedrockRuntimeClient],
