@@ -8,7 +8,7 @@ export class TextController {
 
   @Post()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  create(@Body() createTextDto: CreateTextDto) {
-    return this.textService.create();
+  async create(@Body() createTextDto: CreateTextDto) {
+    return { response: await this.textService.create(createTextDto) };
   }
 }

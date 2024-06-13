@@ -1,20 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { BedrockService } from '../../shared/aws/bedrock/bedrock.service';
+import { CreateTextDto } from './dto/create-text.dto';
 
 @Injectable()
 export class TextService {
-  create() {
-    return 'This action adds a new text';
-  }
+  constructor(private readonly bedrockService: BedrockService) {}
 
-  findAll() {
-    return `This action returns all text`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} text`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} text`;
+  async create(request: CreateTextDto): Promise<string> {
+    return await this.bedrockService.converse(request.text);
   }
 }

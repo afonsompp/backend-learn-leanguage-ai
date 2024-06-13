@@ -1,44 +1,51 @@
 import { Injectable } from '@nestjs/common';
 import {
   BedrockRuntimeClient,
-  ConversationRole,
-  ConverseCommand,
-  Message,
+  InvokeModelCommand,
 } from '@aws-sdk/client-bedrock-runtime';
 
 @Injectable()
 export class BedrockService {
   constructor(private readonly bedrockClient: BedrockRuntimeClient) {}
 
-  async converse(modelId: string, userMessage: string) {
-    // Create a conversation array with the user's message
-    const conversation: Message[] = [
-      {
-        role: ConversationRole.USER,
-        content: [
-          {
-            text: userMessage,
-          },
-        ],
-      },
-    ];
+  async converse(userMessage): Promise<string> {
+    // Create a Bedrock Runtime client in the AWS Region of your choice.
 
-    // Create a ConverseCommand with the provided parameters
-    const command = new ConverseCommand({
-      modelId,
-      messages: conversation,
-      inferenceConfig: { maxTokens: 512, temperature: 0.5, topP: 0.9 },
-    });
+    // Set the model ID, e.g., Llama 3 8B Instruct.
+    const modelId = 'meta.llama3-8b-instruct-v1:0';
 
-    try {
-      // Send the command to the model and wait for the response
-      const response = await this.bedrockClient.send(command);
+    // Embed the message in Llama 3's prompt format.
+    const prompt = `
+<|begin_of_text|>
+<|start_header_id|>user<|end_header_id|>
+${userMessage}
+<|eot_id|>
+<|start_header_id|>assistant<|end_header_id|>
+`;
 
-      // Extract and return the response text
-      return response.output?.message?.content?.at(0)?.text;
-    } catch (err) {
-      // Handle errors gracefully
-      throw new Error(`Can't invoke '${modelId}'. Reason: ${err}`);
-    }
+    // Format the request payload using the model's native structure.
+    const request = {
+      prompt,
+      // Optional inference parameters:
+      max_gen_len: 512,
+      temperature: 0.5,
+      top_p: 0.9,
+    };
+
+    // Encode and send the request.
+    const response = await this.bedrockClient.send(
+      new InvokeModelCommand({
+        contentType: 'application/json',
+        body: JSON.stringify(request),
+        modelId,
+      }),
+    );
+
+    // Decode the native response body.
+    /** @type {{ generation: string }} */
+    const nativeResponse = JSON.parse(new TextDecoder().decode(response.body));
+
+    // Extract and print the generated text.
+    return nativeResponse.generation;
   }
 }

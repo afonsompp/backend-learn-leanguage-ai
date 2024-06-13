@@ -4,14 +4,12 @@ import { S3Client } from '@aws-sdk/client-s3';
 import { BedrockRuntimeClient } from '@aws-sdk/client-bedrock-runtime';
 import awsConfig from './config/aws.config';
 import { AwsConfigService } from './config/aws.config.service';
-import { BedrockModule } from './bedrock/bedrock.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       load: [awsConfig],
     }),
-    BedrockModule,
   ],
   providers: [
     AwsConfigService,
