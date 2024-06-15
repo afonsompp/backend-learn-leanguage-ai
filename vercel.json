@@ -6,6 +6,11 @@
       "use": "@vercel/node"
     }
   ],
+  "functions": {
+    "src/main.ts": {
+      "maxDuration": 60
+    }
+  },
   "routes": [
     {
       "src": "/(.*)",
@@ -15,10 +20,7 @@
         "POST",
         "PUT",
         "DELETE"
-      ],
-      "headers": {
-        "x-vercel-max-age": "60s"
-      }
+      ]
     }
   ]
 }
