@@ -15,7 +15,10 @@
         "POST",
         "PUT",
         "DELETE"
-      ]
+      ],
+      "headers": {
+        "x-vercel-max-age": "60s"
+      }
     }
   ]
 }
