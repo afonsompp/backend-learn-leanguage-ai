@@ -13,6 +13,6 @@ jobs:
         uses: actions/checkout@v2
       - name: Create Pull Request
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr create --base main --head develop --title "Merge develop into main" --body "Deploy on vercel."
