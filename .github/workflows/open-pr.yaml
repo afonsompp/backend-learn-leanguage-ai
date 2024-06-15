@@ -1,0 +1,18 @@
+name: Open PR on Develop to Main
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  open_pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Create Pull Request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create --base main --head develop --title "Merge develop into main" --body "Deploy on vercel."
