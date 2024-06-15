@@ -11,7 +11,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Check existing PR
+        id: check_pr
+        run: |
+          PR_EXISTS=$(gh pr list --base main --head develop | wc -l)
+          echo "::set-output name=pr_exists::$PR_EXISTS"
+
       - name: Create Pull Request
+        if: steps.check_pr.outputs.pr_exists == '0'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
