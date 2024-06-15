@@ -1,10 +1,10 @@
-import * as OktaJwtVerifier from '@okta/jwt-verifier';
 import { Injectable } from '@nestjs/common';
 import { AuthConfigService } from '../config/auth.config.service';
+import * as OktaJwtVerifier from '@okta/jwt-verifier';
 
 @Injectable()
 export class AuthService {
-  private oktaVerifier: any;
+  private oktaVerifier: OktaJwtVerifier;
   private readonly audience: string;
 
   constructor(private readonly config: AuthConfigService) {
