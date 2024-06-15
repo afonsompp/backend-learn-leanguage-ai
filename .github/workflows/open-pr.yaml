@@ -11,20 +11,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Set up Git
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          git config user.email "afonsoprad10@gmail.com"
-          git config user.name "GitHub Actions"
-
       - name: Create Pull Request
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          git fetch origin main:main
-          git checkout main
-          git pull origin main
-          git checkout develop
-          git pull origin develop
-          git push origin develop
           gh pr create --base main --head develop --title "Merge develop into main" --body "Deploy on vercel."
