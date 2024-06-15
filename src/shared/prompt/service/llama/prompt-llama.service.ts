@@ -1,6 +1,6 @@
 import { PromptService } from '../prompt.interface';
 
-export class PromptLlamaService implements PromptService {
+export class PromptLlama3Service implements PromptService {
   createPrompt(contents: Content[]) {
     const prompt = '<|begin_of_text|>';
     for (const content of contents) {
