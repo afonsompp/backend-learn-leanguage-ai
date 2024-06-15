@@ -5,10 +5,6 @@ import { ConfigService } from '@nestjs/config';
 export class AuthConfigService {
   constructor(private configService: ConfigService) {}
 
-  get clientId(): string {
-    return this.configService.get<string>('okta.clientId');
-  }
-
   get issuer(): string {
     return this.configService.get<string>('okta.issuer');
   }
