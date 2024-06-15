@@ -8,7 +8,7 @@ import {
 export class BedrockService {
   constructor(private readonly bedrockClient: BedrockRuntimeClient) {}
 
-  async invoke(modelRequest: ModelRequest): Promise<string> {
+  async invokeModel(modelRequest: ModelRequest): Promise<string> {
     const request = {
       prompt: modelRequest.prompt,
       max_gen_len: modelRequest.maxLength,

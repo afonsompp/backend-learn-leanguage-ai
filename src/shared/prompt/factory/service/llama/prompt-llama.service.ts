@@ -2,10 +2,11 @@ import { PromptService } from '../prompt.interface';
 
 export class PromptLlama3Service implements PromptService {
   createPrompt(contents: Content[]) {
-    const prompt = '<|begin_of_text|>';
-    for (const content of contents) {
-      prompt.concat(this.createInstruction(content));
-    }
+    let prompt = '<|begin_of_text|> ';
+    contents.forEach((content) => {
+      prompt += this.createInstruction(content);
+    });
+    prompt += '<|start_header_id|>assistant<|end_header_id|>';
     return prompt;
   }
 

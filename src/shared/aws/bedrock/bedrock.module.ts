@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { BedrockService } from './bedrock.service';
+import { BedrockService } from './service/bedrock.service';
 import { AwsModule } from '../aws.module';
 
 @Module({

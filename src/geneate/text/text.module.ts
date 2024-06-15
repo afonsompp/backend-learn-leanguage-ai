@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
-import { TextService } from './text.service';
-import { TextController } from './text.controller';
+import { TextService } from './service/text.service';
+import { TextController } from './controller/text.controller';
 import { BedrockModule } from '../../shared/aws/bedrock/bedrock.module';
 import { AuthModule } from '../../shared/auth/auth.module';
+import { PromptModule } from '../../shared/prompt/prompt.module';
 
 @Module({
-  imports: [BedrockModule, AuthModule],
+  imports: [BedrockModule, AuthModule, PromptModule],
   controllers: [TextController],
   providers: [TextService],
 })

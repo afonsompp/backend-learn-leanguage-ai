@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { PromptFactoryService } from './prompt-factory.service';
+import { PromptFactory } from './factory/prompt-factory.service';
 
 @Module({
-  providers: [PromptFactoryService],
-  exports: [PromptFactoryService],
+  providers: [PromptFactory],
+  exports: [PromptFactory],
 })
 export class PromptModule {}
