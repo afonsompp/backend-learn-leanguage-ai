@@ -7,6 +7,6 @@ export class TextService {
   constructor(private readonly bedrockService: BedrockService) {}
 
   async create(request: CreateTextDto): Promise<string> {
-    return await this.bedrockService.converse(request.text);
+    return await this.bedrockService.invoke(request.text);
   }
 }

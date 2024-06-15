@@ -4,6 +4,7 @@ import { AwsModule } from './shared/aws/aws.module';
 import { BedrockModule } from './shared/aws/bedrock/bedrock.module';
 import { TextModule } from './geneate/text/text.module';
 import { AuthModule } from './shared/auth/auth.module';
+import { PromptModule } from './shared/prompt/prompt.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { AuthModule } from './shared/auth/auth.module';
     BedrockModule,
     TextModule,
     AuthModule,
+    PromptModule,
   ],
   providers: [],
   exports: [],
