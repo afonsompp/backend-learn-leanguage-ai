@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Headers, Post, UseGuards } from '@nestjs/common';
 import { TextService } from '../service/text.service';
 import { GenerateTextDto } from '../dto/generate-text.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -12,7 +12,10 @@ export class TextController {
   @Post()
   @UseGuards(AuthGuard('bearer'), ScopesGuard)
   @Scopes('read:text', 'write:text')
-  async create(@Body() generateTextDto: GenerateTextDto) {
-    return await this.textService.create(generateTextDto);
+  async create(
+    @Body() generateTextDto: GenerateTextDto,
+    @Headers('authorization') accessToken: string,
+  ) {
+    return await this.textService.create(generateTextDto, accessToken);
   }
 }

@@ -1,6 +1,7 @@
 import {
   HttpException,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
@@ -9,6 +10,8 @@ import { AuthService } from './auth.service';
 
 @Injectable()
 export class HttpStrategy extends PassportStrategy(Strategy) {
+  private logger = new Logger('HttpStrategy');
+
   constructor(private readonly authService: AuthService) {
     super();
   }
@@ -21,7 +24,7 @@ export class HttpStrategy extends PassportStrategy(Strategy) {
       const user = await this.authService.validateToken(token);
       return done(null, user);
     } catch (error) {
-      return done(new UnauthorizedException('Invalid token!'), false);
+      return done(new UnauthorizedException('Invalid token'), false);
     }
   }
 }
