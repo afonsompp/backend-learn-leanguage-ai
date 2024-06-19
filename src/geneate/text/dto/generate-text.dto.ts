@@ -24,23 +24,14 @@ export class GenerateTextDto {
     return [
       {
         type: 'system',
-        text: `you are a IA what will generate texts to user learn a new language based on parameters bellow`,
-      },
-      {
-        type: 'system',
-        text: `generate text in markdown with title and content`,
-      },
-      {
-        type: 'system',
-        text: `generate text in this language: ${this.textLanguage}`,
-      },
-      {
-        type: 'system',
-        text: `the user are ${this.experience} in language of text`,
-      },
-      {
-        type: 'system',
-        text: `user have this native language: ${this.nativeLanguage}`,
+        text: `
+        you are a IA what will generate stories in json to user learn a new language;
+        use this template to generate text '{"title":"","story":["sentence"]}'
+        the assistant must generate only json as response, without suffix or prefix;
+        user have this native language: ${this.nativeLanguage};
+        generate text in this language: ${this.textLanguage};
+        the user are ${this.experience} in language of text;
+        `,
       },
       {
         type: 'user',

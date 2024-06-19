@@ -1,6 +1,6 @@
 import { PromptService } from './service/prompt.interface';
-import { PromptLlama3Service } from './service/llama/prompt-llama.service';
-import { Injectable } from '@nestjs/common';
+import { PromptLlama3Service } from './service/llama/prompt-llama3.service';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 
 @Injectable()
 export class PromptFactory {
@@ -10,7 +10,9 @@ export class PromptFactory {
       case 'meta.llama3-70b-instruct-v1:0':
         return new PromptLlama3Service();
       default:
-        throw new Error(`Unsupported model id: ${modelId}`);
+        throw new UnprocessableEntityException(
+          `Unsupported model id: ${modelId}`,
+        );
     }
   }
 }
