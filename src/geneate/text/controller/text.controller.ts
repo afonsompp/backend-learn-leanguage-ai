@@ -1,9 +1,9 @@
-import { Body, Controller, Headers, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { TextService } from '../service/text.service';
 import { GenerateTextDto } from '../dto/generate-text.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { Scopes } from '../../../shared/auth/service/scopes/scopes.decorator';
-import { ScopesGuard } from '../../../shared/auth/service/scopes/scopes.guard';
+import { ScopesGuard } from '../../../shared/security/auth/service/scopes/scopes.guard';
+import { Scopes } from '../../../shared/security/auth/service/scopes/scopes.decorator';
 
 @Controller('text')
 export class TextController {
@@ -12,10 +12,9 @@ export class TextController {
   @Post()
   @UseGuards(AuthGuard('bearer'), ScopesGuard)
   @Scopes('read:text', 'write:text')
-  async create(
-    @Body() generateTextDto: GenerateTextDto,
-    @Headers('authorization') accessToken: string,
-  ) {
-    return await this.textService.create(generateTextDto, accessToken);
+  async create(@Body() generateTextDto: GenerateTextDto) {
+    return {
+      data: JSON.parse(await this.textService.create(generateTextDto)),
+    };
   }
 }

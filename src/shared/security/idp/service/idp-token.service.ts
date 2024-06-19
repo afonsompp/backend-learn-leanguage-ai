@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { Auth0TokenService } from '../service/auth0-token.service';
+import { AdminTokenService } from './admin-token.service';
 import { HttpService } from '@nestjs/axios';
 import { AuthApiConfigService } from '../config/auth-api.config.service';
 
 @Injectable()
-export class Auth0IdpTokenService {
+export class IdpTokenService {
   private readonly url: string;
 
   constructor(
-    private readonly authAccessToken: Auth0TokenService,
+    private readonly authAccessToken: AdminTokenService,
     private readonly httpService: HttpService,
     private readonly configService: AuthApiConfigService,
   ) {

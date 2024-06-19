@@ -3,7 +3,7 @@ import { AuthApiConfigService } from '../config/auth-api.config.service';
 import { HttpService } from '@nestjs/axios';
 
 @Injectable()
-export class Auth0TokenService {
+export class AdminTokenService {
   private readonly auth0Audience: string;
   private readonly auth0ClientId: string;
   private readonly auth0ClientSecret: string;

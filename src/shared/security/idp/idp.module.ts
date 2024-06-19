@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { Auth0TokenService } from './service/auth0-token.service';
+import { AdminTokenService } from './service/admin-token.service';
 import { AuthApiConfigService } from './config/auth-api.config.service';
 import { ConfigModule } from '@nestjs/config';
 import authApiConfig from './config/auth-api.config';
 import { HttpModule } from '@nestjs/axios';
-import { Auth0IdpTokenService } from './idp/auth0-idp-token.service';
+import { IdpTokenService } from './service/idp-token.service';
 
 @Module({
   imports: [
@@ -13,7 +13,7 @@ import { Auth0IdpTokenService } from './idp/auth0-idp-token.service';
     }),
     HttpModule,
   ],
-  providers: [Auth0TokenService, AuthApiConfigService, Auth0IdpTokenService],
-  exports: [Auth0IdpTokenService],
+  providers: [AdminTokenService, AuthApiConfigService, IdpTokenService],
+  exports: [IdpTokenService],
 })
-export class Auth0Module {}
+export class IdpModule {}

@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AwsModule } from './shared/aws/aws.module';
 import { TextModule } from './geneate/text/text.module';
-import { AuthModule } from './shared/auth/auth.module';
 import { PromptModule } from './shared/prompt/prompt.module';
 import { BedrockModule } from './shared/aws/bedrock/bedrock.module';
-import { Auth0Module } from './shared/authServer/auth0/auth0.module';
+import { AuthModule } from './shared/security/auth/auth.module';
+import { IdpModule } from './shared/security/idp/idp.module';
 
 @Module({
   imports: [
@@ -17,9 +17,8 @@ import { Auth0Module } from './shared/authServer/auth0/auth0.module';
     TextModule,
     AuthModule,
     PromptModule,
-    Auth0Module,
+    IdpModule,
   ],
-  providers: [AuthModule],
   exports: [],
 })
 export class AppModule {}
