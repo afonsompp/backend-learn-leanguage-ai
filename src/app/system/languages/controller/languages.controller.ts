@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   Param,
+  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -34,7 +35,7 @@ export class LanguagesController {
 
   @Put(':id')
   update(
-    @Param('id') id: number,
+    @Param('id', new ParseIntPipe()) id: number,
     @Body() language: UpdateLanguageDto,
   ): Promise<LanguageDto> {
     return this.languagesService.update(id, language);
@@ -42,7 +43,7 @@ export class LanguagesController {
 
   @Delete(':id')
   @HttpCode(204)
-  delete(@Param('id') id: number): Promise<void> {
+  delete(@Param('id', new ParseIntPipe()) id: number): Promise<void> {
     return this.languagesService.delete(id);
   }
 }
