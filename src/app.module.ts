@@ -1,24 +1,29 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AwsModule } from './shared/aws/aws.module';
-import { TextModule } from './geneate/text/text.module';
-import { PromptModule } from './shared/prompt/prompt.module';
-import { BedrockModule } from './shared/aws/bedrock/bedrock.module';
-import { AuthModule } from './shared/security/auth/auth.module';
-import { IdpModule } from './shared/security/idp/idp.module';
+import PropertiesConfig from './config/properties.config';
+import { AwsConfigService } from './config/aws.config.service';
+import { OAuthConfigService } from './config/oauth.config.service';
+import { DatabaseModule } from './core/database/database.module';
+import { SecurityModule } from './core/security/security.module';
+import { AudioModule } from './app/features/geneate/audio/audio.module';
+import { TextModule } from './app/features/geneate/text/text.module';
+import { SystemModule } from './app/system/system.module';
+import { ProfileModule } from './app/profile/profile.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      ignoreEnvFile: true,
+      isGlobal: true,
+      load: [PropertiesConfig],
     }),
-    AwsModule,
-    BedrockModule,
+    AudioModule,
+    SecurityModule,
+    SystemModule,
     TextModule,
-    AuthModule,
-    PromptModule,
-    IdpModule,
+    DatabaseModule,
+    ProfileModule,
   ],
-  exports: [],
+  providers: [AwsConfigService, OAuthConfigService],
+  exports: [AwsConfigService, OAuthConfigService],
 })
 export class AppModule {}
