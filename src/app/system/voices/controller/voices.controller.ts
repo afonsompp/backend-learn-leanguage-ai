@@ -4,14 +4,16 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
 import { VoicesService } from '../service/voices.service';
 import { VoiceDto } from '../dto/voice.dto';
 import { CreateVoiceDto } from '../dto/create-voice.dto';
+import { UpdateVoiceDto } from '../dto/update-voice.dto';
 
-@Controller('system/voices')
+@Controller('voices')
 export class VoicesController {
   constructor(private readonly voicesService: VoicesService) {}
 
@@ -31,12 +33,15 @@ export class VoicesController {
   }
 
   @Put(':id')
-  update(@Param('id') id: number, @Body() voice: VoiceDto): Promise<VoiceDto> {
+  update(
+    @Param('id', new ParseIntPipe()) id: number,
+    @Body() voice: UpdateVoiceDto,
+  ): Promise<VoiceDto> {
     return this.voicesService.update(id, voice);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: number): Promise<void> {
+  delete(@Param('id', new ParseIntPipe()) id: number): Promise<void> {
     return this.voicesService.delete(id);
   }
 }
