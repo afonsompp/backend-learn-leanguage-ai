@@ -3,12 +3,13 @@ import { ConfigModule } from '@nestjs/config';
 import PropertiesConfig from './config/properties.config';
 import { AwsConfigService } from './config/aws.config.service';
 import { OAuthConfigService } from './config/oauth.config.service';
-import { DatabaseModule } from './core/database/database.module';
-import { SecurityModule } from './core/security/security.module';
-import { AudioModule } from './app/features/geneate/audio/audio.module';
-import { TextModule } from './app/features/geneate/text/text.module';
-import { SystemModule } from './app/system/system.module';
-import { ProfileModule } from './app/profile/profile.module';
+import { DatabaseModule } from '@core/database/database.module';
+import { SecurityModule } from '@core/security/security.module';
+import { AudioModule } from '@app/features/geneate/audio/audio.module';
+import { TextModule } from '@app/features/geneate/text/text.module';
+import { SystemModule } from '@app/system/system.module';
+import { ProfileModule } from '@app/user/profiles/profile.module';
+import { RouterModule } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -16,6 +17,12 @@ import { ProfileModule } from './app/profile/profile.module';
       isGlobal: true,
       load: [PropertiesConfig],
     }),
+    RouterModule.register([
+      {
+        path: 'system',
+        module: SystemModule,
+      },
+    ]),
     AudioModule,
     SecurityModule,
     SystemModule,
