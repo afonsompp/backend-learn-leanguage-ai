@@ -33,10 +33,11 @@ export class LanguagesService {
   }
 
   async create(createLanguageDto: CreateLanguageDto): Promise<LanguageDto> {
-    const language = await this.languagesRepository.findOne({
-      where: { code: createLanguageDto.code },
-    });
-    if (language) {
+    if (
+      await this.languagesRepository.existsBy({
+        code: createLanguageDto.code,
+      })
+    ) {
       throw new ConflictException(
         `Language with code ${createLanguageDto.code} already exists`,
       );

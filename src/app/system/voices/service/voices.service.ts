@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { VoiceDto } from '../dto/voice.dto';
 import { UpdateVoiceDto } from '../dto/update-voice.dto';
 import { Voice } from '../entities/voice.entity';
@@ -37,6 +41,11 @@ export class VoicesService {
   async create(createVoiceDto: CreateVoiceDto): Promise<VoiceDto> {
     const { languageCode, ...voiceData } = createVoiceDto;
 
+    if (await this.voicesRepository.existsBy({ name: voiceData.name })) {
+      throw new ConflictException(
+        `Voice with name ${voiceData.name} already exists`,
+      );
+    }
     const language = await this.languagesRepository.findOne({
       where: { code: languageCode },
     });
