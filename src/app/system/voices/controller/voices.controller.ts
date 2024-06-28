@@ -11,7 +11,7 @@ import { VoicesService } from '../service/voices.service';
 import { VoiceDto } from '../dto/voice.dto';
 import { CreateVoiceDto } from '../dto/create-voice.dto';
 
-@Controller('voices')
+@Controller('system/voices')
 export class VoicesController {
   constructor(private readonly voicesService: VoicesService) {}
 
