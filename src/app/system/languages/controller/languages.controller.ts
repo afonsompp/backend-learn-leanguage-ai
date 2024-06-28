@@ -14,7 +14,7 @@ import { LanguageDto } from '../dto/language.dto';
 import { UpdateLanguageDto } from '../dto/update-language.dto';
 import { CreateLanguageDto } from '../dto/create-language.dto';
 
-@Controller('system/languages')
+@Controller('languages')
 export class LanguagesController {
   constructor(private readonly languagesService: LanguagesService) {}
 
