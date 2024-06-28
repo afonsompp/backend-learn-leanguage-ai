@@ -4,12 +4,12 @@ export class VoiceDto {
   id: number;
   name: string;
   gender: string;
-  languageId: number;
+  languageCode: string;
 
   constructor(voice: Voice) {
     this.id = voice.id;
     this.name = voice.name;
     this.gender = voice.gender;
-    this.languageId = voice.language.id;
+    this.languageCode = voice.language.code;
   }
 }
