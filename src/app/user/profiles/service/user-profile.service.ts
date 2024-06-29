@@ -9,18 +9,17 @@ import { CreateProfileDto } from '../dto/create-profile.dto';
 import { UpdateProfileDto } from '../dto/update-profile.dto';
 import { ProfileDto } from '../dto/profile.dto';
 import { UserProfile } from '@app/user/profiles/entity/user-profile.entity';
-import { Language } from '@app/system/languages/entities/language.entity';
+import { LanguagesService } from '@app/system/languages/service/languages.service';
 
 @Injectable()
 export class UserProfileService {
   constructor(
     @InjectRepository(UserProfile)
     private profilesRepository: Repository<UserProfile>,
-    @InjectRepository(Language)
-    private languagesRepository: Repository<Language>,
+    private readonly languagesService: LanguagesService,
   ) {}
 
-  async findOne(idProvider: string): Promise<ProfileDto> {
+  async findOne(idProvider: string): Promise<UserProfile> {
     const profile = await this.profilesRepository.findOne({
       where: { idProvider },
       relations: ['nativeLanguage'],
@@ -30,7 +29,7 @@ export class UserProfileService {
         `Profile with idProvider ${idProvider} not found`,
       );
     }
-    return new ProfileDto(profile);
+    return profile;
   }
 
   async create(createProfileDto: CreateProfileDto): Promise<ProfileDto> {
@@ -43,15 +42,7 @@ export class UserProfileService {
     ) {
       throw new ConflictException('user already have a profile');
     }
-    const language = await this.languagesRepository.findOne({
-      where: { code: nativeLanguage },
-    });
-
-    if (!language) {
-      throw new NotFoundException(
-        `Language with code ${nativeLanguage} not found`,
-      );
-    }
+    const language = await this.languagesService.findOne(nativeLanguage);
 
     const profile = this.profilesRepository.create({
       ...profileData,
@@ -80,17 +71,8 @@ export class UserProfileService {
     }
 
     if (nativeLanguage) {
-      const language = await this.languagesRepository.findOne({
-        where: { code: nativeLanguage },
-      });
-
-      if (!language) {
-        throw new NotFoundException(
-          `Language with code ${nativeLanguage} not found`,
-        );
-      }
-
-      profile.nativeLanguage = language;
+      profile.nativeLanguage =
+        await this.languagesService.findOne(nativeLanguage);
     }
 
     await this.profilesRepository.update({ idProvider }, profile);

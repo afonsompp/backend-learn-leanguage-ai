@@ -8,8 +8,8 @@ import { SecurityModule } from '@core/security/security.module';
 import { AudioModule } from '@app/features/geneate/audio/audio.module';
 import { TextModule } from '@app/features/geneate/text/text.module';
 import { SystemModule } from '@app/system/system.module';
-import { ProfileModule } from '@app/user/profiles/profile.module';
 import { RouterModule } from '@nestjs/core';
+import { UserModule } from '@app/user/user.module';
 
 @Module({
   imports: [
@@ -28,7 +28,7 @@ import { RouterModule } from '@nestjs/core';
     SystemModule,
     TextModule,
     DatabaseModule,
-    ProfileModule,
+    UserModule,
   ],
   providers: [AwsConfigService, OAuthConfigService],
   exports: [AwsConfigService, OAuthConfigService],

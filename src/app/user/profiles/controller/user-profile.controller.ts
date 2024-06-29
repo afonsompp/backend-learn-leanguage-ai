@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   Post,
   Put,
@@ -45,19 +44,12 @@ export class UserProfileController {
   @Get()
   @UseGuards(AuthGuard('bearer'), ScopesGuard)
   async findOne(@Req() req: UserRequest): Promise<ProfileDto> {
-    try {
-      return await this.userProfileService.findOne(req.user.sub);
-    } catch (error) {
-      throw new NotFoundException(error.message);
-    }
+    const profile = await this.userProfileService.findOne(req.user.sub);
+    return new ProfileDto(profile);
   }
 
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<void> {
-    try {
-      await this.userProfileService.delete(id);
-    } catch (error) {
-      throw new NotFoundException(error.message);
-    }
+    await this.userProfileService.delete(id);
   }
 }
