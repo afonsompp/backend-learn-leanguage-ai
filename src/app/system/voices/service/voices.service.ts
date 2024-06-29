@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Language } from '../../languages/entities/language.entity';
 import { CreateVoiceDto } from '../dto/create-voice.dto';
+import { LanguagesService } from '@app/system/languages/service/languages.service';
 
 @Injectable()
 export class VoicesService {
@@ -17,7 +18,7 @@ export class VoicesService {
     @InjectRepository(Voice)
     private voicesRepository: Repository<Voice>,
     @InjectRepository(Language)
-    private languagesRepository: Repository<Language>,
+    private languagesService: LanguagesService,
   ) {}
 
   async findAll(): Promise<VoiceDto[]> {
@@ -46,9 +47,7 @@ export class VoicesService {
         `Voice with name ${voiceData.name} already exists`,
       );
     }
-    const language = await this.languagesRepository.findOne({
-      where: { code: languageCode },
-    });
+    const language = await this.languagesService.findOne(languageCode);
 
     if (!language) {
       throw new NotFoundException(
@@ -74,20 +73,7 @@ export class VoicesService {
     if (!voice) {
       throw new NotFoundException(`Voice with id ${id} not found`);
     }
-
-    if (languageCode) {
-      const language = await this.languagesRepository.findOne({
-        where: { code: languageCode },
-      });
-
-      if (!language) {
-        throw new NotFoundException(
-          `Language with code ${languageCode} not found`,
-        );
-      }
-
-      voice.language = language;
-    }
+    voice.language = await this.languagesService.findOne(languageCode);
 
     await this.voicesRepository.update(voice, voiceData);
     const updatedVoice = await this.voicesRepository.findOneBy({ id });
