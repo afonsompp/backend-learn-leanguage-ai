@@ -24,8 +24,8 @@ export class LanguagesController {
   }
 
   @Get(':code')
-  findOne(@Param('code') code: string): Promise<LanguageDto> {
-    return this.languagesService.findOne(code);
+  async findOne(@Param('code') code: string): Promise<LanguageDto> {
+    return new LanguageDto(await this.languagesService.findOne(code));
   }
 
   @Post()

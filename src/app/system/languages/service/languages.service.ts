@@ -22,14 +22,14 @@ export class LanguagesService {
     return languages.map((language) => new LanguageDto(language));
   }
 
-  async findOne(code: string): Promise<LanguageDto> {
+  async findOne(code: string): Promise<Language> {
     const language = await this.languagesRepository.findOne({
       where: { code },
     });
     if (!language) {
       throw new NotFoundException(`Language with code ${code} not found`);
     }
-    return new LanguageDto(language);
+    return language;
   }
 
   async create(createLanguageDto: CreateLanguageDto): Promise<LanguageDto> {
