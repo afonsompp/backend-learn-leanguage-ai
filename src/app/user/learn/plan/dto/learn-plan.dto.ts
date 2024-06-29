@@ -9,7 +9,7 @@ export class LearnPlanDto {
 
   constructor(userLearnPlan: UserLearnPlan) {
     this.id = userLearnPlan.id;
-    this.userId = userLearnPlan.user.idProvider;
+    this.userId = userLearnPlan.user.userId;
     this.targetLanguage = userLearnPlan.targetLanguage.code;
     this.level = userLearnPlan.level;
   }

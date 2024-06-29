@@ -1,7 +1,7 @@
 import { IsString } from 'class-validator';
 
 export class CreateProfileDto {
-  idProvider: string;
+  userId: string;
 
   @IsString()
   nativeLanguage: string;

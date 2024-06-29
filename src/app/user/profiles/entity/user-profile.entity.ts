@@ -16,7 +16,7 @@ export class UserProfile {
 
   @Index()
   @Column({ unique: true, nullable: false })
-  idProvider: string;
+  userId: string;
 
   @ManyToOne(() => Language)
   nativeLanguage: Language;

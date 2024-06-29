@@ -19,15 +19,13 @@ export class UserProfileService {
     private readonly languagesService: LanguagesService,
   ) {}
 
-  async findOne(idProvider: string): Promise<UserProfile> {
+  async findOne(userId: string): Promise<UserProfile> {
     const profile = await this.profilesRepository.findOne({
-      where: { idProvider },
+      where: { userId },
       relations: ['nativeLanguage'],
     });
     if (!profile) {
-      throw new NotFoundException(
-        `Profile with idProvider ${idProvider} not found`,
-      );
+      throw new NotFoundException(`Profile with userId ${userId} not found`);
     }
     return profile;
   }
@@ -55,18 +53,18 @@ export class UserProfileService {
   }
 
   async update(
-    idProvider: string,
+    userId: string,
     updateProfileDto: UpdateProfileDto,
   ): Promise<ProfileDto> {
     const { nativeLanguage } = updateProfileDto;
 
     const profile = await this.profilesRepository.findOne({
-      where: { idProvider },
+      where: { userId },
     });
 
     if (!profile) {
       throw new NotFoundException(
-        `Profile with id provider ${idProvider} not found`,
+        `Profile with id provider ${userId} not found`,
       );
     }
 
@@ -75,7 +73,7 @@ export class UserProfileService {
         await this.languagesService.findOne(nativeLanguage);
     }
 
-    await this.profilesRepository.update({ idProvider }, profile);
+    await this.profilesRepository.update({ userId }, profile);
 
     return new ProfileDto(profile);
   }

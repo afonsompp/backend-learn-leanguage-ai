@@ -2,12 +2,12 @@ import { UserProfile } from '../entity/user-profile.entity';
 
 export class ProfileDto {
   id: string;
-  idProvider: string;
+  userId: string;
   nativeLanguage: string;
 
   constructor(profile: UserProfile) {
     this.id = profile.id;
-    this.idProvider = profile.idProvider;
+    this.userId = profile.userId;
     this.nativeLanguage = profile.nativeLanguage.code;
   }
 }
