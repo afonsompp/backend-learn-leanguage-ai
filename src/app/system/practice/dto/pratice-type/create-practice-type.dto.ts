@@ -1,15 +1,8 @@
-import {
-  IsBoolean,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-  Max,
-  Min,
-} from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, Max, Min } from 'class-validator';
 
-export class CreatePromptDto {
-  @IsNotEmpty()
+export class CreatePracticeTypeDto {
   @IsString()
+  @IsNotEmpty()
   name: string;
 
   @IsNotEmpty()
@@ -32,7 +25,5 @@ export class CreatePromptDto {
   @Max(1)
   topP: number;
 
-  @IsNotEmpty()
-  @IsBoolean()
-  stream: boolean;
+  stream?: boolean;
 }

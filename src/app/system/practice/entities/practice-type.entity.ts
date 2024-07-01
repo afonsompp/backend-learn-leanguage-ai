@@ -1,7 +1,7 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class PromptTemplate {
+export class PracticeType {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -21,6 +21,6 @@ export class PromptTemplate {
   @Column({ nullable: false })
   topP: number;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, default: false })
   stream: boolean;
 }
