@@ -16,7 +16,7 @@ import { UserRequest } from '@core/security/auth/entity/user-request.interface';
 import { AuthGuard } from '@nestjs/passport';
 import { ScopesGuard } from '@core/security/scopes/scopes.guard';
 
-@Controller('learn/plans')
+@Controller('learnPlans')
 export class LearnPlansController {
   constructor(private readonly learnPlansService: LearnPlansService) {}
 
