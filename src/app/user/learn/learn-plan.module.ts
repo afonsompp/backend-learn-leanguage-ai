@@ -16,5 +16,6 @@ import { ProfileModule } from '@app/user/profiles/profile.module';
   ],
   controllers: [LearnPlansController],
   providers: [LearnPlansService],
+  exports: [LearnPlansService],
 })
 export class LearnPlanModule {}

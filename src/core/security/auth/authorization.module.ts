@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './service/auth.service';
 import { PassportModule } from '@nestjs/passport';
-import { OAuthConfigService } from '../../../config/oauth.config.service';
+import { OAuthConfigService } from '@config/oauth.config.service';
 import { HttpStrategy } from './strategy/http.strategy';
-import { ScopesGuard } from '../scopes/scopes.guard';
+import { ScopesGuard } from '@core/security/scopes/scopes.guard';
 
 @Module({
   imports: [PassportModule],

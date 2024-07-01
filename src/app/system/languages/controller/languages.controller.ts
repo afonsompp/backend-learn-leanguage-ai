@@ -9,10 +9,10 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { LanguagesService } from '../service/languages.service';
-import { LanguageDto } from '../dto/language.dto';
-import { UpdateLanguageDto } from '../dto/update-language.dto';
-import { CreateLanguageDto } from '../dto/create-language.dto';
+import { LanguagesService } from '@app/system/languages/service/languages.service';
+import { LanguageDto } from '@app/system/languages/dto/language.dto';
+import { CreateLanguageDto } from '@app/system/languages/dto/create-language.dto';
+import { UpdateLanguageDto } from '@app/system/languages/dto/update-language.dto';
 
 @Controller('languages')
 export class LanguagesController {

@@ -5,10 +5,10 @@ import {
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Language } from '../entities/language.entity';
-import { CreateLanguageDto } from '../dto/create-language.dto';
-import { LanguageDto } from '../dto/language.dto';
-import { UpdateLanguageDto } from '../dto/update-language.dto';
+import { Language } from '@app/system/languages/entities/language.entity';
+import { LanguageDto } from '@app/system/languages/dto/language.dto';
+import { CreateLanguageDto } from '@app/system/languages/dto/create-language.dto';
+import { UpdateLanguageDto } from '@app/system/languages/dto/update-language.dto';
 
 @Injectable()
 export class LanguagesService {

@@ -4,18 +4,18 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
-  Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { CreateProfileDto } from '../dto/create-profile.dto';
 import { ScopesGuard } from '@core/security/scopes/scopes.guard';
 import { UserRequest } from '@core/security/auth/entity/user-request.interface';
 import { UserProfileService } from '@app/user/profiles/service/user-profile.service';
 import { ProfileDto } from '@app/user/profiles/dto/profile.dto';
 import { UpdateProfileDto } from '@app/user/profiles/dto/update-profile.dto';
+import { CreateProfileDto } from '@app/user/profiles/dto/create-profile.dto';
 
 @Controller('profiles')
 export class UserProfileController {
@@ -27,12 +27,12 @@ export class UserProfileController {
     @Req() req: UserRequest,
     @Body() createProfileDto: CreateProfileDto,
   ) {
-    createProfileDto.idProvider = req.user.sub;
+    createProfileDto.userId = req.user.sub;
 
     return this.userProfileService.create(createProfileDto);
   }
 
-  @Put()
+  @Patch()
   @UseGuards(AuthGuard('bearer'), ScopesGuard)
   async update(
     @Req() req: UserRequest,

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserLearnPlan } from '@app/user/learn/plan/entity/user-learn-plan.entity';
 import { CreateLearnPlanDto } from '@app/user/learn/plan/dto/create-learn-plan.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -16,8 +20,8 @@ export class LearnPlansService {
     private readonly languagesService: LanguagesService,
   ) {}
 
-  async findAll(idProvider: string): Promise<LearnPlanDto[]> {
-    const user = await this.userProfileService.findOne(idProvider);
+  async findAll(userId: string): Promise<LearnPlanDto[]> {
+    const user = await this.userProfileService.findOne(userId);
 
     const userLearnPlans = await this.learnPlansRepository.find({
       where: { user },
@@ -28,15 +32,19 @@ export class LearnPlansService {
     );
   }
 
-  async findOne(id: string, idProvider: string): Promise<UserLearnPlan> {
-    const user = await this.userProfileService.findOne(idProvider);
-
+  async findOne(id: string, userId: string): Promise<UserLearnPlan> {
     const learnPlan = await this.learnPlansRepository.findOne({
-      where: { id, user },
+      where: { id },
       relations: ['user', 'targetLanguage'],
     });
     if (!learnPlan) {
       throw new NotFoundException(`Learn plan with id ${id} not found`);
+    }
+
+    if (learnPlan.user.userId !== userId) {
+      throw new UnauthorizedException(
+        'user do not have access to this resource',
+      );
     }
     return learnPlan;
   }
@@ -59,8 +67,8 @@ export class LearnPlansService {
     return new LearnPlanDto(learnPlan);
   }
 
-  async delete(id: string, idProvider: string): Promise<void> {
-    const user = await this.userProfileService.findOne(idProvider);
+  async delete(id: string, userId: string): Promise<void> {
+    const user = await this.userProfileService.findOne(userId);
 
     const result = await this.learnPlansRepository.delete({ id, user });
     if (result.affected === 0) {

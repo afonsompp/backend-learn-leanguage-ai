@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { OAuthConfigService } from '../../../../config/oauth.config.service';
+import { OAuthConfigService } from '@config/oauth.config.service';
 
 @Injectable()
 export class AdminTokenService {

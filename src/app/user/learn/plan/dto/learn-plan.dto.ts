@@ -1,5 +1,5 @@
-import { UserLearnPlan } from '../entity/user-learn-plan.entity';
 import { LanguageLevel } from '@app/user/learn/plan/entity/language-level';
+import { UserLearnPlan } from '@app/user/learn/plan/entity/user-learn-plan.entity';
 
 export class LearnPlanDto {
   id: string;

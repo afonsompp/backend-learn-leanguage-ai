@@ -5,11 +5,11 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateProfileDto } from '../dto/create-profile.dto';
-import { UpdateProfileDto } from '../dto/update-profile.dto';
-import { ProfileDto } from '../dto/profile.dto';
 import { UserProfile } from '@app/user/profiles/entity/user-profile.entity';
 import { LanguagesService } from '@app/system/languages/service/languages.service';
+import { CreateProfileDto } from '@app/user/profiles/dto/create-profile.dto';
+import { UpdateProfileDto } from '@app/user/profiles/dto/update-profile.dto';
+import { ProfileDto } from '@app/user/profiles/dto/profile.dto';
 
 @Injectable()
 export class UserProfileService {

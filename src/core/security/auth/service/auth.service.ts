@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as OktaJwtVerifier from '@okta/jwt-verifier';
-import { OAuthConfigService } from '../../../../config/oauth.config.service';
+import { OAuthConfigService } from '@config/oauth.config.service';
 
 @Injectable()
 export class AuthService {

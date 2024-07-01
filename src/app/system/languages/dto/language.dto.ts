@@ -1,4 +1,4 @@
-import { Language } from '../entities/language.entity';
+import { Language } from '@app/system/languages/entities/language.entity';
 
 export class LanguageDto {
   id: number;

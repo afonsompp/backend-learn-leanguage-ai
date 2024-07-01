@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { LanguagesModule } from './languages/languages.module';
 import { VoicesModule } from './voices/voices.module';
 import { RouterModule } from '@nestjs/core';
+import { PracticeDefinitionModule } from '@app/system/practice/practice-definition.module';
 
 @Module({
   imports: [
@@ -15,6 +16,10 @@ import { RouterModule } from '@nestjs/core';
       {
         path: 'system',
         module: VoicesModule,
+      },
+      {
+        path: 'system',
+        module: PracticeDefinitionModule,
       },
     ]),
   ],
