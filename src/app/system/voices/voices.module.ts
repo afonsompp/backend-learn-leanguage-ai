@@ -3,7 +3,7 @@ import { VoicesController } from './controller/voices.controller';
 import { VoicesService } from './service/voices.service';
 import { Voice } from './entities/voice.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Language } from '../languages/entities/language.entity';
+import { Language } from '@app/system/languages/entities/language.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Voice, Language])],

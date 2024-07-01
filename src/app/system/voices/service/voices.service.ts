@@ -3,14 +3,14 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { VoiceDto } from '../dto/voice.dto';
-import { UpdateVoiceDto } from '../dto/update-voice.dto';
-import { Voice } from '../entities/voice.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Language } from '../../languages/entities/language.entity';
-import { CreateVoiceDto } from '../dto/create-voice.dto';
 import { LanguagesService } from '@app/system/languages/service/languages.service';
+import { UpdateVoiceDto } from '@app/system/voices/dto/update-voice.dto';
+import { VoiceDto } from '@app/system/voices/dto/voice.dto';
+import { Voice } from '@app/system/voices/entities/voice.entity';
+import { Language } from '@app/system/languages/entities/language.entity';
+import { CreateVoiceDto } from '@app/system/voices/dto/create-voice.dto';
 
 @Injectable()
 export class VoicesService {

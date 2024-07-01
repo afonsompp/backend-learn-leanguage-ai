@@ -1,4 +1,4 @@
-import { Voice } from '../entities/voice.entity';
+import { Voice } from '@app/system/voices/entities/voice.entity';
 
 export class VoiceDto {
   id: number;

@@ -5,13 +5,13 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
-  Put,
 } from '@nestjs/common';
-import { VoicesService } from '../service/voices.service';
-import { VoiceDto } from '../dto/voice.dto';
-import { CreateVoiceDto } from '../dto/create-voice.dto';
-import { UpdateVoiceDto } from '../dto/update-voice.dto';
+import { VoicesService } from '@app/system/voices/service/voices.service';
+import { VoiceDto } from '@app/system/voices/dto/voice.dto';
+import { CreateVoiceDto } from '@app/system/voices/dto/create-voice.dto';
+import { UpdateVoiceDto } from '@app/system/voices/dto/update-voice.dto';
 
 @Controller('voices')
 export class VoicesController {
@@ -32,7 +32,7 @@ export class VoicesController {
     return this.voicesService.create(voice);
   }
 
-  @Put(':id')
+  @Patch(':id')
   update(
     @Param('id', new ParseIntPipe()) id: number,
     @Body() voice: UpdateVoiceDto,

@@ -1,4 +1,3 @@
-import { Language } from '../../languages/entities/language.entity';
 import {
   Column,
   Entity,
@@ -6,6 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Language } from '@app/system/languages/entities/language.entity';
 
 @Entity()
 export class Voice {
