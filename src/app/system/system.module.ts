@@ -9,16 +9,11 @@ import { PracticeDefinitionModule } from '@app/system/practice/practice-definiti
     RouterModule.register([
       {
         path: 'system',
-        children: [
-          {
-            path: '',
-            module: LanguagesModule,
-          },
-          {
-            path: '',
-            module: PracticeDefinitionModule,
-          },
-        ],
+        module: LanguagesModule,
+      },
+      {
+        path: 'system',
+        module: PracticeDefinitionModule,
       },
     ]),
   ],
