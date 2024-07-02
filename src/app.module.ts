@@ -10,6 +10,7 @@ import { UserModule } from '@app/user/user.module';
 import { LoggingMiddleware } from '@shared/logs/middleware/default-logging.middleware';
 import { AIModule } from '@core/ai/AI.module';
 import { OpenaiConfigService } from '@config/openai.config.service';
+import { StoryModule } from '@app/features/story/story.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { OpenaiConfigService } from '@config/openai.config.service';
     DatabaseModule,
     UserModule,
     AIModule,
+    StoryModule,
   ],
   providers: [AwsConfigService, OAuthConfigService, OpenaiConfigService],
   exports: [AwsConfigService, OAuthConfigService, OpenaiConfigService],
