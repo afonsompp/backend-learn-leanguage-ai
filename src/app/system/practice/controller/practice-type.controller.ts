@@ -14,7 +14,7 @@ import { CreatePracticeTypeDto } from '@app/system/practice/dto/pratice-type/cre
 import { AuthGuard } from '@nestjs/passport';
 import { ScopesGuard } from '@core/security/scopes/scopes.guard';
 
-@Controller('practices/types')
+@Controller('practiceTypes')
 export class PracticeTypeController {
   constructor(private readonly practiceTypeService: PracticeTypeService) {}
 
