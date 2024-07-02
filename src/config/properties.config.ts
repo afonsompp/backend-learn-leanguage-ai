@@ -23,4 +23,8 @@ export default () => ({
       clientSecret: process.env.BACKEND_CLIENT_SECRET,
     },
   },
+  openai: {
+    url: process.env.OPENAI_URL,
+    apiKey: process.env.OPENAI_API_KEY,
+  },
 });

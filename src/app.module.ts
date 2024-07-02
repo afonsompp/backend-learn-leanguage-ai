@@ -10,6 +10,8 @@ import { TextModule } from '@app/features/geneate/text/text.module';
 import { SystemModule } from '@app/system/system.module';
 import { UserModule } from '@app/user/user.module';
 import { LoggingMiddleware } from '@shared/logs/middleware/default-logging.middleware';
+import { AIModule } from '@core/ai/AI.module';
+import { OpenaiConfigService } from '@config/openai.config.service';
 
 @Module({
   imports: [
@@ -23,9 +25,10 @@ import { LoggingMiddleware } from '@shared/logs/middleware/default-logging.middl
     TextModule,
     DatabaseModule,
     UserModule,
+    AIModule,
   ],
-  providers: [AwsConfigService, OAuthConfigService],
-  exports: [AwsConfigService, OAuthConfigService],
+  providers: [AwsConfigService, OAuthConfigService, OpenaiConfigService],
+  exports: [AwsConfigService, OAuthConfigService, OpenaiConfigService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

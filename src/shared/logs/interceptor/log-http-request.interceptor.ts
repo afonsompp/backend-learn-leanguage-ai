@@ -20,9 +20,11 @@ export class LoggingInterceptor implements NestInterceptor {
     this.logger.log(`Incoming Request: ${method} ${url}`);
 
     return next.handle().pipe(
-      tap(() => {
+      tap((response) => {
         const totalTime = Date.now() - startTime;
-        this.logger.log(`Response: ${method} ${url}`);
+        this.logger.log(
+          `Response: ${method} ${url} with status: ${response.status}`,
+        );
         this.logger.log(`Total Integration Time: ${totalTime}ms`);
       }),
     );
