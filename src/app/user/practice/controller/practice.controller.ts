@@ -40,7 +40,7 @@ export class PracticeController {
     @Req() req: UserRequest,
     @Param('learnPlanId') learnPlanId: string,
   ) {
-    const practices = await this.practiceService.findAllByPlan(
+    const practices = await this.practiceService.findAllByLearnPlan(
       learnPlanId,
       req.user.sub,
     );
@@ -54,7 +54,7 @@ export class PracticeController {
     @Param('learnPlanId') learnPlanId: string,
     @Param('id') id: string,
   ) {
-    const practice = await this.practiceService.findOneById(
+    const practice = await this.practiceService.findOneByIdAndLearnPlan(
       id,
       learnPlanId,
       req.user.sub,

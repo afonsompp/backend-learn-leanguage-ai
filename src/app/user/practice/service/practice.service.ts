@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -20,7 +21,7 @@ export class PracticeService {
     private readonly userLearnPlanService: LearnPlansService,
   ) {}
 
-  async findOneById(
+  async findOneByIdAndLearnPlan(
     id: string,
     learnPlanId: string,
     userId: string,
@@ -39,7 +40,28 @@ export class PracticeService {
     return practice;
   }
 
-  async findAllByPlan(
+  async findOneById(id: string, userId: string): Promise<Practice> {
+    const practice = await this.practicesRepository.findOne({
+      where: { id },
+      relations: [
+        'practiceType',
+        'learnPlan',
+        'learnPlan.user',
+        'contentHistory',
+      ],
+    });
+    if (!practice) {
+      throw new NotFoundException(`Practice with id ${id} not found`);
+    }
+    if (practice.learnPlan.user.userId !== userId) {
+      throw new UnauthorizedException(
+        'user do not have access to this resource',
+      );
+    }
+    return practice;
+  }
+
+  async findAllByLearnPlan(
     learnPlanId: string,
     userId: string,
   ): Promise<Practice[]> {
