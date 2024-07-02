@@ -1,0 +1,55 @@
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { ScopesGuard } from '@core/security/scopes/scopes.guard';
+import { UserRequest } from '@core/security/auth/entity/user-request.interface';
+import { UserProfileService } from '@app/user/profiles/service/user-profile.service';
+import { ProfileDto } from '@app/user/profiles/dto/profile.dto';
+import { UpdateProfileDto } from '@app/user/profiles/dto/update-profile.dto';
+import { CreateProfileDto } from '@app/user/profiles/dto/create-profile.dto';
+
+@Controller('profiles')
+export class UserProfileController {
+  constructor(private readonly userProfileService: UserProfileService) {}
+
+  @Post()
+  @UseGuards(AuthGuard('bearer'), ScopesGuard)
+  async create(
+    @Req() req: UserRequest,
+    @Body() createProfileDto: CreateProfileDto,
+  ) {
+    createProfileDto.userId = req.user.sub;
+
+    return this.userProfileService.create(createProfileDto);
+  }
+
+  @Patch()
+  @UseGuards(AuthGuard('bearer'), ScopesGuard)
+  async update(
+    @Req() req: UserRequest,
+    @Body() updateProfileDto: UpdateProfileDto,
+  ): Promise<ProfileDto> {
+    return await this.userProfileService.update(req.user.sub, updateProfileDto);
+  }
+
+  @Get()
+  @UseGuards(AuthGuard('bearer'), ScopesGuard)
+  async findOne(@Req() req: UserRequest): Promise<ProfileDto> {
+    const profile = await this.userProfileService.findOne(req.user.sub);
+    return new ProfileDto(profile);
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: string): Promise<void> {
+    await this.userProfileService.delete(id);
+  }
+}
