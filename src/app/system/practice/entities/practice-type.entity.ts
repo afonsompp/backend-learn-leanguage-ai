@@ -15,12 +15,15 @@ export class PracticeType {
   @Column({ nullable: false })
   model: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, default: 1 })
   temperature: number;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, default: 1 })
   topP: number;
 
   @Column({ nullable: false, default: false })
   stream: boolean;
+
+  @Column({ nullable: false, default: 256 })
+  maxTokens: string;
 }

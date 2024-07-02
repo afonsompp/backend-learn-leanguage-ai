@@ -5,9 +5,10 @@ import {
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreatePracticeTypeDto } from '@app/system/practice/dto/pratice-type/create-practice-type.dto';
-import { UpdatePracticeTypeDto } from '@app/system/practice/dto/pratice-type/update-practice-type.dto';
 import { PracticeType } from '@app/system/practice/entities/practice-type.entity';
+import { CreatePracticeTypeDto } from '@app/system/practice/dto/create-practice-type.dto';
+import { UpdatePracticeTypeDto } from '@app/system/practice/dto/update-practice-type.dto';
+import { PracticeTypeDto } from '@app/system/practice/dto/practice-type.dto';
 
 @Injectable()
 export class PracticeTypeService {
@@ -32,7 +33,7 @@ export class PracticeTypeService {
 
   async create(
     createPracticeTypeDto: CreatePracticeTypeDto,
-  ): Promise<PracticeType> {
+  ): Promise<PracticeTypeDto> {
     const existingPracticeType = await this.practiceTypesRepository.findOne({
       where: { name: createPracticeTypeDto.name },
     });
@@ -45,14 +46,18 @@ export class PracticeTypeService {
       createPracticeTypeDto,
     );
     await this.practiceTypesRepository.save(createdPracticeType);
-    return createdPracticeType;
+    return new PracticeTypeDto(createdPracticeType);
   }
 
   async update(
     id: string,
     updatePracticeTypeDto: UpdatePracticeTypeDto,
-  ): Promise<PracticeType> {
+  ): Promise<PracticeTypeDto> {
     const practiceType = await this.findOne(id);
+
+    if (!practiceType) {
+      throw new NotFoundException(`PracticeType with id ${id} not found`);
+    }
 
     if (
       updatePracticeTypeDto.name &&
@@ -69,7 +74,9 @@ export class PracticeTypeService {
     }
 
     Object.assign(practiceType, updatePracticeTypeDto);
-    return this.practiceTypesRepository.save(practiceType);
+    const updatedPracticeType =
+      await this.practiceTypesRepository.save(practiceType);
+    return new PracticeTypeDto(updatedPracticeType);
   }
 
   async delete(id: string): Promise<void> {

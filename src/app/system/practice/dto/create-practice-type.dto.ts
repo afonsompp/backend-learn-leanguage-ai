@@ -24,6 +24,4 @@ export class CreatePracticeTypeDto {
   @Min(0)
   @Max(1)
   topP: number;
-
-  stream?: boolean;
 }

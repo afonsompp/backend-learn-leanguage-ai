@@ -9,10 +9,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PracticeTypeService } from '@app/system/practice/service/practice-type.service';
-import { UpdatePracticeTypeDto } from '@app/system/practice/dto/pratice-type/update-practice-type.dto';
-import { CreatePracticeTypeDto } from '@app/system/practice/dto/pratice-type/create-practice-type.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ScopesGuard } from '@core/security/scopes/scopes.guard';
+import { CreatePracticeTypeDto } from '@app/system/practice/dto/create-practice-type.dto';
+import { UpdatePracticeTypeDto } from '@app/system/practice/dto/update-practice-type.dto';
+import { PracticeTypeDto } from '@app/system/practice/dto/practice-type.dto';
 
 @Controller('practiceTypes')
 export class PracticeTypeController {
@@ -26,14 +27,18 @@ export class PracticeTypeController {
 
   @Get()
   @UseGuards(AuthGuard('bearer'), ScopesGuard)
-  findAll() {
-    return this.practiceTypeService.findAll();
+  async findAll(): Promise<PracticeTypeDto[]> {
+    const practiceTypes = await this.practiceTypeService.findAll();
+    return practiceTypes.map(
+      (practiceType) => new PracticeTypeDto(practiceType),
+    );
   }
 
   @Get(':id')
   @UseGuards(AuthGuard('bearer'), ScopesGuard)
-  findOne(@Param('id') id: string) {
-    return this.practiceTypeService.findOne(id);
+  async findOne(@Param('id') id: string): Promise<PracticeTypeDto> {
+    const practiceType = await this.practiceTypeService.findOne(id);
+    return new PracticeTypeDto(practiceType);
   }
 
   @Patch(':id')
@@ -41,13 +46,13 @@ export class PracticeTypeController {
   update(
     @Param('id') id: string,
     @Body() updatePracticeTypeDto: UpdatePracticeTypeDto,
-  ) {
+  ): Promise<PracticeTypeDto> {
     return this.practiceTypeService.update(id, updatePracticeTypeDto);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard('bearer'), ScopesGuard)
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: string): Promise<void> {
     return this.practiceTypeService.delete(id);
   }
 }
