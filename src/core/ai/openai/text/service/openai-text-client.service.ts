@@ -15,7 +15,7 @@ export class OpenaiTextClientService {
 
   async chat(chatRequest: ChatRequest): Promise<AxiosResponse<ChatResponse>> {
     try {
-      const response = await this.httpService.post(
+      const response = this.httpService.post(
         `${this.openAIConfigService.url}/chat/completions`,
         chatRequest,
         {

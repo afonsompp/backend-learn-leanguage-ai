@@ -11,6 +11,8 @@ import { LoggingMiddleware } from '@shared/logs/middleware/default-logging.middl
 import { AIModule } from '@core/ai/AI.module';
 import { OpenaiConfigService } from '@config/openai.config.service';
 import { StoryModule } from '@app/features/story/story.module';
+import { ScopesGuard } from '@core/security/scopes/scopes.guard';
+import { OAuthGuard } from '@core/security/auth/guard/oauth.guard';
 
 @Module({
   imports: [
@@ -25,7 +27,13 @@ import { StoryModule } from '@app/features/story/story.module';
     AIModule,
     StoryModule,
   ],
-  providers: [AwsConfigService, OAuthConfigService, OpenaiConfigService],
+  providers: [
+    AwsConfigService,
+    OAuthConfigService,
+    OpenaiConfigService,
+    ScopesGuard,
+    OAuthGuard,
+  ],
   exports: [AwsConfigService, OAuthConfigService, OpenaiConfigService],
 })
 export class AppModule implements NestModule {

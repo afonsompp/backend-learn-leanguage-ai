@@ -6,21 +6,19 @@ import {
   Param,
   Post,
   Req,
-  UseGuards,
 } from '@nestjs/common';
 import { UserRequest } from '@core/security/auth/entity/user-request.interface';
-import { AuthGuard } from '@nestjs/passport';
-import { ScopesGuard } from '@core/security/scopes/scopes.guard';
 import { PracticeDto } from '@app/user/practice/dto/pratice/practice.dto';
 import { PracticeService } from '@app/user/practice/service/practice.service';
 import { CreatePracticeDto } from '@app/user/practice/dto/pratice/create-practice.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('practices')
+@ApiBearerAuth()
 export class PracticeController {
   constructor(private readonly practiceService: PracticeService) {}
 
   @Post()
-  @UseGuards(AuthGuard('bearer'), ScopesGuard)
   async create(
     @Req() req: UserRequest,
     @Param('learnPlanId') learnPlanId: string,
@@ -35,7 +33,6 @@ export class PracticeController {
   }
 
   @Get()
-  @UseGuards(AuthGuard('bearer'), ScopesGuard)
   async findAllByLearnPlan(
     @Req() req: UserRequest,
     @Param('learnPlanId') learnPlanId: string,
@@ -48,7 +45,6 @@ export class PracticeController {
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard('bearer'), ScopesGuard)
   async findById(
     @Req() req: UserRequest,
     @Param('learnPlanId') learnPlanId: string,
@@ -63,7 +59,6 @@ export class PracticeController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard('bearer'), ScopesGuard)
   remove(
     @Req() req: UserRequest,
     @Param('learnPlanId') learnPlanId: string,

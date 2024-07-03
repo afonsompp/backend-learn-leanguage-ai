@@ -1,7 +1,11 @@
 import { Module } from '@nestjs/common';
-import { OpenaiModule } from './openai/openai.module';
+import { HttpModule } from '@nestjs/axios';
+import { OpenaiTextClientService } from '@core/ai/openai/text/service/openai-text-client.service';
+import { OpenaiConfigService } from '@config/openai.config.service';
 
 @Module({
-  imports: [OpenaiModule],
+  imports: [HttpModule],
+  providers: [OpenaiTextClientService, OpenaiConfigService],
+  exports: [OpenaiTextClientService],
 })
 export class AIModule {}
