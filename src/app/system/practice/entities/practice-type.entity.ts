@@ -25,5 +25,5 @@ export class PracticeType {
   stream: boolean;
 
   @Column({ nullable: false, default: 256 })
-  maxTokens: string;
+  maxTokens: number;
 }
