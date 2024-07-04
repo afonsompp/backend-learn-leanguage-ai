@@ -79,23 +79,6 @@ export class PracticeTypeService {
       throw new NotFoundException(`PracticeType with id ${id} not found`);
     }
 
-    if (
-      updatePracticeTypeDto.name &&
-      updatePracticeTypeDto.name !== practiceType.name
-    ) {
-      const existingPracticeType = await this.practiceTypesRepository.findOne({
-        where: { name: updatePracticeTypeDto.name },
-      });
-      if (existingPracticeType) {
-        this.logger.warn(
-          `PracticeType with name ${updatePracticeTypeDto.name} already exists`,
-        );
-        throw new ConflictException(
-          `PracticeType with name ${updatePracticeTypeDto.name} already exists`,
-        );
-      }
-    }
-
     Object.assign(practiceType, updatePracticeTypeDto);
     const updatedPracticeType =
       await this.practiceTypesRepository.save(practiceType);

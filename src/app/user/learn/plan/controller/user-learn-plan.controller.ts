@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   NotFoundException,
   Param,
   Post,
@@ -46,6 +47,7 @@ export class LearnPlansController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
   async delete(
     @Req() req: UserRequest,
     @Param('id') id: string,

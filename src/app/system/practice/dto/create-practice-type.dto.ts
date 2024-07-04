@@ -5,16 +5,16 @@ export class CreatePracticeTypeDto {
   @IsNotEmpty()
   name: string;
 
-  @IsNotEmpty()
   @IsString()
+  @IsNotEmpty()
   instruction: string;
 
-  @IsNotEmpty()
   @IsString()
+  @IsNotEmpty()
   model: string;
 
-  @IsNotEmpty()
   @IsNumber()
+  @IsNotEmpty()
   @Min(0)
   @Max(2)
   temperature: number;

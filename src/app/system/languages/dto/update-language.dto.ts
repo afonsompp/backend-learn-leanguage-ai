@@ -1,4 +1,10 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateLanguageDto } from './create-language.dto';
+import { IsNotEmpty, IsString } from 'class-validator';
 
-export class UpdateLanguageDto extends PartialType(CreateLanguageDto) {}
+export class UpdateLanguageDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+  @IsString()
+  @IsNotEmpty()
+  code: string;
+}

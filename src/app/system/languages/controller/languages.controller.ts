@@ -6,8 +6,8 @@ import {
   HttpCode,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
-  Put,
 } from '@nestjs/common';
 import { LanguagesService } from '@app/system/languages/service/languages.service';
 import { LanguageDto } from '@app/system/languages/dto/language.dto';
@@ -35,7 +35,7 @@ export class LanguagesController {
     return this.languagesService.create(language);
   }
 
-  @Put(':id')
+  @Patch(':id')
   update(
     @Param('id', new ParseIntPipe()) id: number,
     @Body() language: UpdateLanguageDto,

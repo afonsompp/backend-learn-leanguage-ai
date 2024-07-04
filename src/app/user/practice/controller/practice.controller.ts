@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Post,
   Req,
@@ -59,6 +60,7 @@ export class PracticeController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
   remove(
     @Req() req: UserRequest,
     @Param('learnPlanId') learnPlanId: string,

@@ -11,8 +11,9 @@ export class PracticeTypeDto {
 
   constructor(practiceType: PracticeType) {
     this.id = practiceType.id;
-    this.instruction = practiceType.name;
-    this.model = practiceType.name;
+    this.name = practiceType.name;
+    this.instruction = practiceType.instruction;
+    this.model = practiceType.model;
     this.temperature = practiceType.temperature;
     this.topP = practiceType.topP;
     this.stream = practiceType.stream;
