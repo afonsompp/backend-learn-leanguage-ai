@@ -7,11 +7,13 @@ import { ScopesGuard } from '@core/security/scopes/scopes.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  // General
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+    }),
+  );
   app.setGlobalPrefix('api');
 
-  // Register OAuth2 Bearer strategy
   const reflector = app.get(Reflector);
   app.useGlobalGuards(new OAuthGuard(), new ScopesGuard(reflector));
 
