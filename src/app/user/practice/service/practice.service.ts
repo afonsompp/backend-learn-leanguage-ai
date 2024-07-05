@@ -54,8 +54,9 @@ export class PracticeService {
       where: { id },
       relations: [
         'practiceType',
-        'learnPlan',
+        'learnPlan.targetLanguage',
         'learnPlan.user',
+        'learnPlan.user.nativeLanguage',
         'contentHistory',
       ],
     });

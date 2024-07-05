@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { GenerateStoryTextDto } from '@app/features/story/text/generator/dto/generate-story-text.dto';
 import { PracticeService } from '@app/user/practice/service/practice.service';
 import { Practice } from '@app/user/practice/entities/practice.entity';
-import { OpenaiTextClientService } from '@core/ai/openai/text/service/openai-text-client.service';
+import { OpenaiTextClientService } from '@shared/ai/openai/text/service/openai-text-client.service';
 
 @Injectable()
 export class GenerateStoryTextService {
@@ -36,12 +36,12 @@ export class GenerateStoryTextService {
 
     const response = await this.openaiTextClientService.chat(chatRequest);
 
-    if (!response.data.choices || response.data.choices.length === 0) {
+    if (!response.choices || response.choices.length === 0) {
       this.logger.error('No response choices from OpenAI');
       throw new Error('No response from OpenAI');
     }
 
-    const storyText = response.data.choices[0].message.content;
+    const storyText = response.choices[0].message.content;
     this.logger.log(`Generated story text: ${storyText}`);
     return storyText;
   }
@@ -58,7 +58,7 @@ export class GenerateStoryTextService {
       max_tokens: practice.practiceType.maxTokens,
       stream: practice.practiceType.stream,
     };
-    this.logger.log(`Built chat request: ${JSON.stringify(chatRequest)}`);
+    this.logger.log(`Built chat request`);
     return chatRequest;
   }
 
@@ -89,10 +89,6 @@ export class GenerateStoryTextService {
       role: 'user',
       content: `theme: ${newStory.theme}, with ${newStory.length} words`,
     });
-
-    this.logger.log(
-      `Generated messages for chat request: ${JSON.stringify(messages)}`,
-    );
     return messages;
   }
 
