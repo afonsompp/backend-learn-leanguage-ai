@@ -1,21 +1,19 @@
-import { HttpService } from '@nestjs/axios';
-import { AxiosResponse } from 'axios';
 import { OpenaiConfigService } from '@config/openai.config.service';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
-import { lastValueFrom } from 'rxjs';
-import { ChatResponse } from '@core/ai/openai/text/interface/chat-response';
+import { ChatResponse } from '@shared/ai/openai/text/interface/chat-response';
+import { HttpClientService } from '@core/client/service/http-client.service';
 
 @Injectable()
 export class OpenaiTextClientService {
   private logger = new Logger(OpenaiTextClientService.name);
   constructor(
-    private httpService: HttpService,
+    private httpService: HttpClientService,
     private openAIConfigService: OpenaiConfigService,
   ) {}
 
-  async chat(chatRequest: ChatRequest): Promise<AxiosResponse<ChatResponse>> {
+  async chat(chatRequest: ChatRequest): Promise<ChatResponse> {
     try {
-      const response = this.httpService.post(
+      return this.httpService.post<ChatResponse>(
         `${this.openAIConfigService.url}/chat/completions`,
         chatRequest,
         {
@@ -24,9 +22,7 @@ export class OpenaiTextClientService {
           },
         },
       );
-      return await lastValueFrom(response.pipe());
     } catch (error) {
-      this.logger.error('Error occurred while calling OpenAI API', error.stack);
       throw new HttpException(
         'Failed to fetch data from OpenAI API',
         error.response?.status || 500,

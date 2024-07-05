@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { HttpModule } from '@nestjs/axios';
-import { OpenaiTextClientService } from '@core/ai/openai/text/service/openai-text-client.service';
 import { OpenaiConfigService } from '@config/openai.config.service';
+import { HttpClientModule } from '@core/client/http-client.module';
+import { OpenaiTextClientService } from '@shared/ai/openai/text/service/openai-text-client.service';
 
 @Module({
-  imports: [HttpModule],
+  imports: [HttpClientModule],
   providers: [OpenaiTextClientService, OpenaiConfigService],
   exports: [OpenaiTextClientService],
 })
