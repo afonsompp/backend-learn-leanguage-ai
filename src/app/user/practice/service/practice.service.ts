@@ -7,11 +7,10 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { LearnPlansService } from '@app/user/learn/plan/service/user-learn-plan.service';
+import { LearnPlanService } from '@app/user/learn/plan/service/user-learn-plan.service';
 import { PracticeTypeService } from '@app/system/practice/service/practice-type.service';
 import { Practice } from '@app/user/practice/entities/practice.entity';
 import { CreatePracticeDto } from '@app/user/practice/dto/pratice/create-practice.dto';
-import { CreatePracticeContentDto } from '@app/user/practice/dto/content/create-practice-content.dto';
 
 @Injectable()
 export class PracticeService {
@@ -21,7 +20,7 @@ export class PracticeService {
     @InjectRepository(Practice)
     private practicesRepository: Repository<Practice>,
     private readonly practiceTypeService: PracticeTypeService,
-    private readonly userLearnPlanService: LearnPlansService,
+    private readonly userLearnPlanService: LearnPlanService,
   ) {}
 
   async findOneByIdAndLearnPlan(
@@ -38,7 +37,12 @@ export class PracticeService {
     );
     const practice = await this.practicesRepository.findOne({
       where: { id, learnPlan },
-      relations: ['practiceType', 'learnPlan', 'contentHistory'],
+      relations: [
+        'practiceType',
+        'learnPlan.user',
+        'learnPlan.targetLanguage',
+        'learnPlan.user.nativeLanguage',
+      ],
     });
     if (!practice) {
       this.logger.warn(`Practice with id ${id} not found`);
@@ -141,11 +145,9 @@ export class PracticeService {
       );
     }
 
-    const contentHistory = Array.of(new CreatePracticeContentDto('user', null));
     const practice = this.practicesRepository.create({
       practiceType: practiceTypeEntity,
       learnPlan: learnPlanEntity,
-      contentHistory,
     });
 
     await this.practicesRepository.save(practice);
