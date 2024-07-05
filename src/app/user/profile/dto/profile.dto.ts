@@ -1,4 +1,4 @@
-import { UserProfile } from '@app/user/profiles/entity/user-profile.entity';
+import { UserProfile } from '@app/user/profile/entity/user-profile.entity';
 
 export class ProfileDto {
   id: string;

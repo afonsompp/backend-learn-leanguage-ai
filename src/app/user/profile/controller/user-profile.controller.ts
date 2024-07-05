@@ -10,10 +10,10 @@ import {
   Req,
 } from '@nestjs/common';
 import { UserRequest } from '@core/security/auth/entity/user-request.interface';
-import { UserProfileService } from '@app/user/profiles/service/user-profile.service';
-import { ProfileDto } from '@app/user/profiles/dto/profile.dto';
-import { UpdateProfileDto } from '@app/user/profiles/dto/update-profile.dto';
-import { CreateProfileDto } from '@app/user/profiles/dto/create-profile.dto';
+import { UserProfileService } from '@app/user/profile/service/user-profile.service';
+import { ProfileDto } from '@app/user/profile/dto/profile.dto';
+import { UpdateProfileDto } from '@app/user/profile/dto/update-profile.dto';
+import { CreateProfileDto } from '@app/user/profile/dto/create-profile.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('profiles')

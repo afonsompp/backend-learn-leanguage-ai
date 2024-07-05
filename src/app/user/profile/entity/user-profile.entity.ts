@@ -6,7 +6,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Language } from '@app/system/languages/entities/language.entity';
+import { Language } from '@app/system/language/entities/language.entity';
 import { UserLearnPlan } from '@app/user/learn/plan/entity/user-learn-plan.entity';
 
 @Entity()

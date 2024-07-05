@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Language } from '@app/system/languages/entities/language.entity';
-import { UserProfile } from '@app/user/profiles/entity/user-profile.entity';
+import { Language } from '@app/system/language/entities/language.entity';
+import { UserProfile } from '@app/user/profile/entity/user-profile.entity';
 import { LanguageLevel } from '@app/user/learn/plan/entity/language-level';
 
 @Entity()

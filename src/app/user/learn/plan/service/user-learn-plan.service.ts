@@ -9,8 +9,8 @@ import { CreateLearnPlanDto } from '@app/user/learn/plan/dto/create-learn-plan.d
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LearnPlanDto } from '@app/user/learn/plan/dto/learn-plan.dto';
-import { UserProfileService } from '@app/user/profiles/service/user-profile.service';
-import { LanguagesService } from '@app/system/languages/service/languages.service';
+import { UserProfileService } from '@app/user/profile/service/user-profile.service';
+import { LanguageService } from '@app/system/language/service/language.service';
 
 @Injectable()
 export class LearnPlansService {
@@ -20,7 +20,7 @@ export class LearnPlansService {
     @InjectRepository(UserLearnPlan)
     private learnPlansRepository: Repository<UserLearnPlan>,
     private readonly userProfileService: UserProfileService,
-    private readonly languagesService: LanguagesService,
+    private readonly languageService: LanguageService,
   ) {}
 
   async findAll(userId: string): Promise<LearnPlanDto[]> {
@@ -69,7 +69,7 @@ export class LearnPlansService {
     );
 
     const user = await this.userProfileService.findOne(userId);
-    const language = await this.languagesService.findOne(targetLanguage);
+    const language = await this.languageService.findOne(targetLanguage);
 
     const learnPlan = this.learnPlansRepository.create({
       user,

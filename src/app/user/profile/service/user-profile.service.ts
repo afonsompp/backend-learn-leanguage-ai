@@ -6,11 +6,11 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserProfile } from '@app/user/profiles/entity/user-profile.entity';
-import { LanguagesService } from '@app/system/languages/service/languages.service';
-import { CreateProfileDto } from '@app/user/profiles/dto/create-profile.dto';
-import { UpdateProfileDto } from '@app/user/profiles/dto/update-profile.dto';
-import { ProfileDto } from '@app/user/profiles/dto/profile.dto';
+import { UserProfile } from '@app/user/profile/entity/user-profile.entity';
+import { LanguageService } from '@app/system/language/service/language.service';
+import { CreateProfileDto } from '@app/user/profile/dto/create-profile.dto';
+import { UpdateProfileDto } from '@app/user/profile/dto/update-profile.dto';
+import { ProfileDto } from '@app/user/profile/dto/profile.dto';
 
 @Injectable()
 export class UserProfileService {
@@ -18,13 +18,13 @@ export class UserProfileService {
 
   constructor(
     @InjectRepository(UserProfile)
-    private profilesRepository: Repository<UserProfile>,
-    private readonly languagesService: LanguagesService,
+    private profileRepository: Repository<UserProfile>,
+    private readonly languageService: LanguageService,
   ) {}
 
   async findOne(userId: string): Promise<UserProfile> {
     this.logger.log(`Fetching profile for userId: ${userId}`);
-    const profile = await this.profilesRepository.findOne({
+    const profile = await this.profileRepository.findOne({
       where: { userId },
       relations: ['nativeLanguage'],
     });
@@ -42,7 +42,7 @@ export class UserProfileService {
     this.logger.log(`Creating profile for userId: ${profileData.userId}`);
 
     if (
-      await this.profilesRepository.existsBy({
+      await this.profileRepository.existsBy({
         ...profileData,
       })
     ) {
@@ -52,14 +52,14 @@ export class UserProfileService {
       throw new ConflictException('User already has a profile');
     }
 
-    const language = await this.languagesService.findOne(nativeLanguage);
+    const language = await this.languageService.findOne(nativeLanguage);
 
-    const profile = this.profilesRepository.create({
+    const profile = this.profileRepository.create({
       ...profileData,
       nativeLanguage: language,
     });
 
-    await this.profilesRepository.save(profile);
+    await this.profileRepository.save(profile);
 
     this.logger.log(`Created profile for userId: ${profileData.userId}`);
     return new ProfileDto(profile);
@@ -73,7 +73,7 @@ export class UserProfileService {
 
     this.logger.log(`Updating profile for userId: ${userId}`);
 
-    const profile = await this.profilesRepository.findOne({
+    const profile = await this.profileRepository.findOne({
       where: { userId },
     });
 
@@ -84,10 +84,10 @@ export class UserProfileService {
 
     if (nativeLanguage) {
       profile.nativeLanguage =
-        await this.languagesService.findOne(nativeLanguage);
+        await this.languageService.findOne(nativeLanguage);
     }
 
-    await this.profilesRepository.update({ userId }, profile);
+    await this.profileRepository.update({ userId }, profile);
 
     this.logger.log(`Updated profile for userId: ${userId}`);
     return new ProfileDto(profile);
@@ -95,7 +95,7 @@ export class UserProfileService {
 
   async delete(id: string): Promise<void> {
     this.logger.log(`Deleting profile with id: ${id}`);
-    const result = await this.profilesRepository.delete(id);
+    const result = await this.profileRepository.delete(id);
     if (result.affected === 0) {
       this.logger.warn(`Profile with id ${id} not found`);
       throw new NotFoundException(`Profile with id ${id} not found`);
