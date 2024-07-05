@@ -12,12 +12,11 @@ export class LoggingMiddleware implements NestMiddleware {
 
     next();
 
-    res.on('finish', () => {
+    res.on('close', () => {
       const duration = Date.now() - startTime;
-      const { statusCode } = res;
 
       this.logger.log(
-        `[${method} ${originalUrl}] Response sent with status ${statusCode} in ${duration}ms`,
+        `[${method} ${originalUrl}] Request completed in ${duration}ms`,
       );
     });
   }
