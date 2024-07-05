@@ -31,7 +31,7 @@ export class PracticeContentService {
     );
 
     if (practice.learnPlan.user.userId !== userId) {
-      this.logger.warn(
+      this.logger.error(
         `User ${userId} tried to access practice ${createPracticeContentDto.practiceId} without permission`,
       );
       throw new ForbiddenException(
@@ -59,7 +59,7 @@ export class PracticeContentService {
     const practice = await this.practiceService.findOneById(practiceId, userId);
 
     if (practice.learnPlan.user.userId !== userId) {
-      this.logger.warn(
+      this.logger.error(
         `User ${userId} tried to access practice ${practiceId} without permission`,
       );
       throw new ForbiddenException(
@@ -85,12 +85,12 @@ export class PracticeContentService {
       relations: ['practice'],
     });
     if (!practiceContent) {
-      this.logger.warn(`PracticeContent with id ${id} not found`);
+      this.logger.error(`PracticeContent with id ${id} not found`);
       throw new NotFoundException(`PracticeContent with id ${id} not found`);
     }
 
     if (practiceContent.practice.learnPlan.user.userId !== userId) {
-      this.logger.warn(
+      this.logger.error(
         `User ${userId} tried to access practice content ${id} without permission`,
       );
       throw new ForbiddenException(
@@ -107,7 +107,7 @@ export class PracticeContentService {
     await this.findOne(id, practiceId, userId);
     const result = await this.practiceContentRepository.delete(id);
     if (result.affected === 0) {
-      this.logger.warn(`PracticeContent with id ${id} not found`);
+      this.logger.error(`PracticeContent with id ${id} not found`);
       throw new NotFoundException(`PracticeContent with id ${id} not found`);
     }
     this.logger.log(`Deleted practice content with id: ${id}`);

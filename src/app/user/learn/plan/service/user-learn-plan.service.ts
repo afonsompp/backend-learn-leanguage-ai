@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   Logger,
   NotFoundException,
@@ -11,10 +12,13 @@ import { Repository } from 'typeorm';
 import { LearnPlanDto } from '@app/user/learn/plan/dto/learn-plan.dto';
 import { UserProfileService } from '@app/user/profile/service/user-profile.service';
 import { LanguageService } from '@app/system/language/service/language.service';
+import { UserProfile } from '@app/user/profile/entity/user-profile.entity';
+import { Language } from '@app/system/language/entities/language.entity';
+import { LanguageLevel } from '@app/user/learn/plan/entity/language-level';
 
 @Injectable()
-export class LearnPlansService {
-  private readonly logger = new Logger(LearnPlansService.name);
+export class LearnPlanService {
+  private readonly logger = new Logger(LearnPlanService.name);
 
   constructor(
     @InjectRepository(UserLearnPlan)
@@ -46,12 +50,12 @@ export class LearnPlansService {
       relations: ['user', 'targetLanguage'],
     });
     if (!learnPlan) {
-      this.logger.warn(`Learn plan with id ${id} not found`);
+      this.logger.error(`Learn plan with id ${id} not found`);
       throw new NotFoundException(`Learn plan with id ${id} not found`);
     }
 
     if (learnPlan.user.userId !== userId) {
-      this.logger.warn(
+      this.logger.error(
         `User ${userId} is not authorized to access learn plan with id ${id}`,
       );
       throw new UnauthorizedException(
@@ -70,6 +74,12 @@ export class LearnPlansService {
 
     const user = await this.userProfileService.findOne(userId);
     const language = await this.languageService.findOne(targetLanguage);
+
+    await this.existLearnPlanByUserAndTargetLanguageAndLevel(
+      user,
+      language,
+      level,
+    );
 
     const learnPlan = this.learnPlansRepository.create({
       user,
@@ -91,11 +101,28 @@ export class LearnPlansService {
 
     const result = await this.learnPlansRepository.delete({ id, user });
     if (result.affected === 0) {
-      this.logger.warn(
+      this.logger.error(
         `Learn plan with id ${id} not found for user: ${userId}`,
       );
       throw new NotFoundException(`Learn plan with id ${id} not found`);
     }
     this.logger.log(`Deleted learn plan with id: ${id} for user: ${userId}`);
+  }
+
+  private async existLearnPlanByUserAndTargetLanguageAndLevel(
+    user: UserProfile,
+    targetLanguage: Language,
+    level: LanguageLevel,
+  ) {
+    if (
+      await this.learnPlansRepository.existsBy({ user, targetLanguage, level })
+    ) {
+      this.logger.error(
+        `Duplicate learn plan with: ${user.userId} | ${targetLanguage.code} | ${level}`,
+      );
+      throw new ConflictException(
+        `Duplicate learn plan for user: ${user.userId}`,
+      );
+    }
   }
 }

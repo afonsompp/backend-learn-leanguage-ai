@@ -9,7 +9,7 @@ import {
   Post,
   Req,
 } from '@nestjs/common';
-import { LearnPlansService } from '@app/user/learn/plan/service/user-learn-plan.service';
+import { LearnPlanService } from '@app/user/learn/plan/service/user-learn-plan.service';
 import { LearnPlanDto } from '@app/user/learn/plan/dto/learn-plan.dto';
 import { CreateLearnPlanDto } from '@app/user/learn/plan/dto/create-learn-plan.dto';
 import { UserRequest } from '@core/security/auth/entity/user-request.interface';
@@ -18,7 +18,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 @Controller('learnPlans')
 @ApiBearerAuth()
 export class LearnPlansController {
-  constructor(private readonly learnPlansService: LearnPlansService) {}
+  constructor(private readonly learnPlansService: LearnPlanService) {}
 
   @Get()
   async findAll(@Req() req: UserRequest): Promise<LearnPlanDto[]> {
