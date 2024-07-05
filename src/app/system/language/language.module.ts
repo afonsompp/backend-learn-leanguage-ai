@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { LanguagesController } from './controller/languages.controller';
-import { LanguagesService } from './service/languages.service';
+import { LanguageController } from './controller/language.controller';
+import { LanguageService } from './service/language.service';
 import { Language } from './entities/language.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthorizationModule } from '@core/security/auth/authorization.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Language]), AuthorizationModule],
-  controllers: [LanguagesController],
-  providers: [LanguagesService],
-  exports: [LanguagesService],
+  controllers: [LanguageController],
+  providers: [LanguageService],
+  exports: [LanguageService],
 })
-export class LanguagesModule {}
+export class LanguageModule {}
