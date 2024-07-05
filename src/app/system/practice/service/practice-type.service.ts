@@ -74,11 +74,6 @@ export class PracticeTypeService {
     this.logger.log(`Updating practice type with id: ${id}`);
     const practiceType = await this.findOne(id);
 
-    if (!practiceType) {
-      this.logger.warn(`PracticeType with id ${id} not found`);
-      throw new NotFoundException(`PracticeType with id ${id} not found`);
-    }
-
     Object.assign(practiceType, updatePracticeTypeDto);
     const updatedPracticeType =
       await this.practiceTypesRepository.save(practiceType);
