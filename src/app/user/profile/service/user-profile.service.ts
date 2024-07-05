@@ -29,7 +29,7 @@ export class UserProfileService {
       relations: ['nativeLanguage'],
     });
     if (!profile) {
-      this.logger.warn(`Profile with userId ${userId} not found`);
+      this.logger.error(`Profile with userId ${userId} not found`);
       throw new NotFoundException(`Profile with userId ${userId} not found`);
     }
     this.logger.log(`Found profile for userId: ${userId}`);

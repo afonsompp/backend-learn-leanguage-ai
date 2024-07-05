@@ -93,7 +93,7 @@ export class PracticeService {
       relations: ['practiceType'],
     });
     if (!practices || practices.length === 0) {
-      this.logger.warn(
+      this.logger.error(
         `Practices not found for userId: ${userId} and learnPlanId: ${learnPlanId}`,
       );
       throw new NotFoundException(
@@ -133,7 +133,7 @@ export class PracticeService {
     });
 
     if (existingPractice) {
-      this.logger.warn(
+      this.logger.error(
         `Practice with practiceType ${practiceType} and learnPlanId ${learnPlanId} already exists`,
       );
       throw new ConflictException(
@@ -165,11 +165,9 @@ export class PracticeService {
     );
     const result = await this.practicesRepository.delete({ id, learnPlan });
     if (result.affected === 0) {
-      this.logger.warn(`Practice with id ${id} not found`);
+      this.logger.error(`Practice with id ${id} not found`);
       throw new NotFoundException(`Practice with id ${id} not found`);
     }
-    this.logger.log(
-      `Deleted practice with id: ${id}, learnPlanId: ${learnPlanId}, userId: ${userId}`,
-    );
+    this.logger.log(`Deleted practice with id: ${id}`);
   }
 }
