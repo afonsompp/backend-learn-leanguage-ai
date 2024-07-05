@@ -8,11 +8,14 @@ import { SecurityModule } from '@core/security/security.module';
 import { SystemModule } from '@app/system/system.module';
 import { UserModule } from '@app/user/user.module';
 import { LoggingMiddleware } from '@shared/logs/middleware/default-logging.middleware';
-import { AIModule } from '@core/ai/AI.module';
+import { AIModule } from '@shared/ai/AI.module';
 import { OpenaiConfigService } from '@config/openai.config.service';
 import { StoryModule } from '@app/features/story/story.module';
 import { ScopesGuard } from '@core/security/scopes/scopes.guard';
 import { OAuthGuard } from '@core/security/auth/guard/oauth.guard';
+import { HttpClientService } from '@core/client/service/http-client.service';
+import { HttpClientModule } from '@core/client/http-client.module';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -26,6 +29,8 @@ import { OAuthGuard } from '@core/security/auth/guard/oauth.guard';
     UserModule,
     AIModule,
     StoryModule,
+    HttpModule,
+    HttpClientModule,
   ],
   providers: [
     AwsConfigService,
@@ -33,6 +38,7 @@ import { OAuthGuard } from '@core/security/auth/guard/oauth.guard';
     OpenaiConfigService,
     ScopesGuard,
     OAuthGuard,
+    HttpClientService,
   ],
   exports: [AwsConfigService, OAuthConfigService, OpenaiConfigService],
 })
