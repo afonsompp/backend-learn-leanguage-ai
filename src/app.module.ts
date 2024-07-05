@@ -7,7 +7,7 @@ import { DatabaseModule } from '@core/database/database.module';
 import { SecurityModule } from '@core/security/security.module';
 import { SystemModule } from '@app/system/system.module';
 import { UserModule } from '@app/user/user.module';
-import { LoggingMiddleware } from '@shared/logs/middleware/default-logging.middleware';
+import { LoggingMiddleware } from '@core/logs/middleware/default-logging.middleware';
 import { AIModule } from '@shared/ai/AI.module';
 import { OpenaiConfigService } from '@config/openai.config.service';
 import { StoryModule } from '@app/features/story/story.module';
