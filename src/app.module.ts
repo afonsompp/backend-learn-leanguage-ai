@@ -7,13 +7,12 @@ import { DatabaseModule } from '@core/database/database.module';
 import { SecurityModule } from '@core/security/security.module';
 import { SystemModule } from '@app/system/system.module';
 import { UserModule } from '@app/user/user.module';
-import { LoggingMiddleware } from '@core/logs/middleware/default-logging.middleware';
+import { HttpRequestInterceptor } from '@core/logs/middleware/default-logging.middleware';
 import { AIModule } from '@shared/ai/AI.module';
 import { OpenaiConfigService } from '@config/openai.config.service';
 import { StoryModule } from '@app/features/story/story.module';
 import { ScopesGuard } from '@core/security/scopes/scopes.guard';
 import { OAuthGuard } from '@core/security/auth/guard/oauth.guard';
-import { HttpClientService } from '@core/client/service/http-client.service';
 import { HttpClientModule } from '@core/client/http-client.module';
 import { HttpModule } from '@nestjs/axios';
 
@@ -38,12 +37,11 @@ import { HttpModule } from '@nestjs/axios';
     OpenaiConfigService,
     ScopesGuard,
     OAuthGuard,
-    HttpClientService,
   ],
   exports: [AwsConfigService, OAuthConfigService, OpenaiConfigService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggingMiddleware).forRoutes('*');
+    consumer.apply(HttpRequestInterceptor).forRoutes('*');
   }
 }
