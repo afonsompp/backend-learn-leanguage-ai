@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsObject, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsObject,
+  IsPositive,
+  IsString,
+} from 'class-validator';
 
 export class CreatePracticeContentDto {
   @IsString()
@@ -9,12 +15,23 @@ export class CreatePracticeContentDto {
   @IsNotEmpty()
   output: object;
 
+  @IsNumber()
+  @IsPositive()
+  totalTokens: number;
+
   @IsString()
   @IsNotEmpty()
   practiceId: string;
 
-  constructor(input: string, output: object) {
+  constructor(
+    input: string,
+    output: object,
+    totalTokens: number,
+    practiceId: string,
+  ) {
     this.input = input;
     this.output = output;
+    this.totalTokens = totalTokens;
+    this.practiceId = practiceId;
   }
 }

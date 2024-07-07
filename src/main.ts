@@ -7,6 +7,12 @@ import { ScopesGuard } from '@core/security/scopes/scopes.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.enableCors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  });
+
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

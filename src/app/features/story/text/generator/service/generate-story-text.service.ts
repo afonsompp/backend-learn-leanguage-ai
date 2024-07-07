@@ -3,6 +3,8 @@ import { GenerateStoryTextDto } from '@app/features/story/text/generator/dto/gen
 import { PracticeService } from '@app/user/practice/service/practice.service';
 import { Practice } from '@app/user/practice/entities/practice.entity';
 import { OpenaiTextClientService } from '@shared/ai/openai/text/service/openai-text-client.service';
+import { PracticeContentService } from '@app/user/practice/service/practice-content.service';
+import { CreatePracticeContentDto } from '@app/user/practice/dto/content/create-practice-content.dto';
 
 @Injectable()
 export class GenerateStoryTextService {
@@ -10,6 +12,7 @@ export class GenerateStoryTextService {
 
   constructor(
     private readonly practiceService: PracticeService,
+    private readonly practiceContentService: PracticeContentService,
     private readonly openaiTextClientService: OpenaiTextClientService,
   ) {}
 
@@ -42,7 +45,17 @@ export class GenerateStoryTextService {
     }
 
     const storyText = response.choices[0].message.content;
-    this.logger.log(`Generated story text: ${storyText}`);
+    const totalTokens = response.usage.total_tokens;
+
+    this.savePracticeContent(
+      request.theme,
+      storyText,
+      totalTokens,
+      practice.id,
+      userId,
+    );
+
+    this.logger.log(`Story generated with success`);
     return storyText;
   }
 
@@ -95,8 +108,28 @@ export class GenerateStoryTextService {
   private buildUserContextInfo(practice: Practice): string {
     const targetLanguage = practice.learnPlan.targetLanguage;
     const nativeLanguage = practice.learnPlan.user.nativeLanguage;
-    const contextInfo = `Native language: ${nativeLanguage.name}, target language: ${targetLanguage.name}`;
+    const contextInfo = `my native language is: ${nativeLanguage.code}, and generate text in language: ${targetLanguage.code}`;
     this.logger.log(`Built user context info: ${contextInfo}`);
     return contextInfo;
+  }
+
+  private savePracticeContent(
+    input: string,
+    output: string,
+    totalTokens: number,
+    practiceId: string,
+    userId: string,
+  ) {
+    this.logger.log(`Saving practice content`);
+    this.practiceContentService.create(
+      new CreatePracticeContentDto(
+        input,
+        JSON.parse(output),
+        totalTokens,
+        practiceId,
+      ),
+      userId,
+    );
+    this.logger.log(`Practice content saved with success`);
   }
 }

@@ -38,11 +38,11 @@ export class PracticeContentService {
         'You do not have permission to access this practice',
       );
     }
-
     this.logger.log(`Creating practice content`);
-    const practiceContent = this.practiceContentRepository.create(
-      createPracticeContentDto,
-    );
+    const practiceContent = this.practiceContentRepository.create({
+      ...createPracticeContentDto,
+      practice,
+    });
 
     await this.practiceContentRepository.save(practiceContent);
     this.logger.log(`Created practice content with id: ${practiceContent.id}`);
