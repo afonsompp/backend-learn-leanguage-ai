@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as OktaJwtVerifier from '@okta/jwt-verifier';
+import { JwtClaims } from '@okta/jwt-verifier';
 import { OAuthConfigService } from '@config/oauth.config.service';
 
 @Injectable()
@@ -16,7 +17,7 @@ export class AuthService {
     this.audience = config.audience;
   }
 
-  async validateToken(token: string): Promise<any> {
+  async validateToken(token: string): Promise<JwtClaims> {
     const jwt = await this.oktaVerifier.verifyAccessToken(token, this.audience);
     return jwt.claims;
   }
