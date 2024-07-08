@@ -83,6 +83,13 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^@config/(.*)$": "<rootDir>/config/$1",
+      "^@core/(.*)$": "<rootDir>/core/$1",
+      "^@app/(.*)$": "<rootDir>/app/$1",
+      "^@shared/(.*)$": "<rootDir>/shared/$1",
+      "^@nestjs/(.*)$": "<rootDir>/../node_modules/@nestjs/$1"
+    }
   }
 }
