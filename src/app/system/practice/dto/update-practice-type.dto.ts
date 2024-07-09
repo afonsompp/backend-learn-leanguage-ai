@@ -12,6 +12,12 @@ export class UpdatePracticeTypeDto {
   @IsNumber()
   @IsNotEmpty()
   @Min(0)
+  @Max(1)
+  topP: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  @Min(0)
   @Max(2)
   temperature: number;
 }
