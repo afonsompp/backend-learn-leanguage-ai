@@ -69,7 +69,7 @@ describe('HttpClientService', () => {
 
     (httpService.get as jest.Mock).mockReturnValue(of(mockResponse));
 
-    const result = await service.get('http://example.com');
+    const result = await service.get('https://example.com');
     expect(result).toEqual(mockData);
   });
 
@@ -85,7 +85,7 @@ describe('HttpClientService', () => {
 
     (httpService.post as jest.Mock).mockReturnValue(of(mockResponse));
 
-    const result = await service.post('http://example.com', { key: 'value' });
+    const result = await service.post('https://example.com', { key: 'value' });
     expect(result).toEqual(mockData);
   });
 });
