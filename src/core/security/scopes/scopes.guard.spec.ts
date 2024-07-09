@@ -14,7 +14,7 @@ describe('ScopesGuard', () => {
   it('should allow access when no scopes are required', () => {
     const mockExecutionContext = createMockExecutionContext(null);
 
-    jest.spyOn(reflector, 'get').mockReturnValue(null); // Mock reflector.get() to return null for 'scopes'
+    jest.spyOn(reflector, 'get').mockReturnValue(null);
 
     const canActivate = guard.canActivate(
       mockExecutionContext as ExecutionContext,

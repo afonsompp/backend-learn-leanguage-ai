@@ -10,7 +10,7 @@ describe('HttpClientLogInterceptorService', () => {
   beforeEach(() => {
     logger = new Logger();
     service = new HttpClientLogInterceptorService();
-    jest.spyOn(logger, 'log').mockImplementation(() => {}); // Mock logger.log
+    jest.spyOn(logger, 'log').mockImplementation(() => {});
   });
 
   it('should intercept request start and add metadata', () => {

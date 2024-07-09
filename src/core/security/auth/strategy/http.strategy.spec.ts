@@ -2,10 +2,10 @@ import { Test } from '@nestjs/testing';
 import { UnauthorizedException } from '@nestjs/common';
 import { HttpStrategy } from './http.strategy';
 import { AuthService } from '@core/security/auth/service/auth.service';
-import { JwtClaims } from '@okta/jwt-verifier'; // Adjust the path as per your project structure
+import { JwtClaims } from '@okta/jwt-verifier';
 
 const mockJwtClaims: JwtClaims = {
-  iss: 'https://example.com', // Example issuer
+  iss: 'https://example.com',
   sub: 'user123', // Example subject
   aud: 'your_app_client_id', // Example audience
   exp: Math.floor(Date.now() / 1000) + 3600, // Expiration in 1 hour
