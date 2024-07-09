@@ -37,31 +37,29 @@ export class UserProfileService {
   }
 
   async create(createProfileDto: CreateProfileDto): Promise<ProfileDto> {
-    const { nativeLanguage, ...profileData } = createProfileDto;
+    const { nativeLanguage, userId } = createProfileDto;
 
-    this.logger.log(`Creating profile for userId: ${profileData.userId}`);
+    this.logger.log(`Creating profile for userId: ${userId}`);
 
     if (
       await this.profileRepository.existsBy({
-        ...profileData,
+        userId,
       })
     ) {
-      this.logger.warn(
-        `Profile already exists for userId: ${profileData.userId}`,
-      );
+      this.logger.warn(`Profile already exists for userId: ${userId}`);
       throw new ConflictException('User already has a profile');
     }
 
     const language = await this.languageService.findOne(nativeLanguage);
 
     const profile = this.profileRepository.create({
-      ...profileData,
+      userId,
       nativeLanguage: language,
     });
 
     await this.profileRepository.save(profile);
 
-    this.logger.log(`Created profile for userId: ${profileData.userId}`);
+    this.logger.log(`Created profile for userId: ${userId}`);
     return new ProfileDto(profile);
   }
 
