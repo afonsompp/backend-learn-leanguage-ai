@@ -11,7 +11,7 @@ import { ScopesGuard } from '@core/security/scopes/scopes.guard';
 import { OAuthGuard } from '@core/security/auth/guard/oauth.guard';
 import { HttpClientModule } from '@core/client/http-client.module';
 import { HttpModule } from '@nestjs/axios';
-import { StorageModule } from './core/storage/storage.module';
+import { StorageModule } from '@core/storage/storage.module';
 
 @Module({
   imports: [
