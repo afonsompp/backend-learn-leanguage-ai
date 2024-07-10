@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AwsConfigService } from '@config/aws.config.service';
 import { S3Client } from '@aws-sdk/client-s3';
+import { BlobService } from './service/blob.service';
 
 @Module({
   providers: [
@@ -18,6 +19,7 @@ import { S3Client } from '@aws-sdk/client-s3';
       },
       inject: [AwsConfigService],
     },
+    BlobService,
   ],
   exports: [S3Client],
 })
