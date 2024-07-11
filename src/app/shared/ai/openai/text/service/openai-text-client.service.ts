@@ -1,11 +1,10 @@
 import { OpenaiConfigService } from '@config/openai.config.service';
-import { HttpException, Injectable, Logger } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { ChatResponse } from '@shared/ai/openai/text/interface/chat-response';
 import { HttpClientService } from '@core/client/service/http-client.service';
 
 @Injectable()
 export class OpenaiTextClientService {
-  private logger = new Logger(OpenaiTextClientService.name);
   constructor(
     private httpService: HttpClientService,
     private openAIConfigService: OpenaiConfigService,
