@@ -10,7 +10,6 @@ import { StoryModule } from '@app/features/story/story.module';
 import { ScopesGuard } from '@core/security/scopes/scopes.guard';
 import { OAuthGuard } from '@core/security/auth/guard/oauth.guard';
 import { HttpClientModule } from '@core/client/http-client.module';
-import { HttpModule } from '@nestjs/axios';
 import { StorageModule } from '@core/storage/storage.module';
 
 @Module({
@@ -24,7 +23,6 @@ import { StorageModule } from '@core/storage/storage.module';
     UserModule,
     AIModule,
     StoryModule,
-    HttpModule,
     HttpClientModule,
     StorageModule,
   ],
