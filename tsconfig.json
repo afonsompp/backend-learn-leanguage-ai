@@ -28,7 +28,7 @@
         "src/config/*"
       ],
       "@shared/*": [
-        "src/app/shared/*"
+        "src/shared/*"
       ]
     }
   }
