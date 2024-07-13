@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ProfileModule } from './profile/profile.module';
 import { AuthorizationModule } from '@core/security/auth/authorization.module';
-import { LearnPlanModule } from '@app/user/learn/learn-plan.module';
 import { RouterModule } from '@nestjs/core';
 import { PracticeModule } from '@app/user/practice/practice.module';
+import { LearnPlanModule } from '@app/user/learn/plan/learn-plan.module';
 
 @Module({
   imports: [
@@ -21,7 +21,7 @@ import { PracticeModule } from '@app/user/practice/practice.module';
         module: LearnPlanModule,
       },
       {
-        path: 'users/learnPlans/:learnPlanId',
+        path: 'users',
         module: PracticeModule,
       },
     ]),

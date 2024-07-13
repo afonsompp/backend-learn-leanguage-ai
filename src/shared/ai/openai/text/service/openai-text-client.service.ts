@@ -1,26 +1,24 @@
-import { HttpException, Injectable, Logger } from '@nestjs/common';
-import { HttpClientService } from '@core/client/service/http-client.service';
 import { OpenaiConfigService } from '@config/openai.config.service';
-import { Readable } from 'typeorm/browser/platform/BrowserPlatformTools';
+import { HttpException, Injectable } from '@nestjs/common';
+import { ChatResponse } from '@shared/ai/openai/text/interface/chat-response';
+import { HttpClientService } from '@core/client/service/http-client.service';
 
 @Injectable()
-export class OpenaiTextToSpeechService {
-  private logger = new Logger(OpenaiTextToSpeechService.name);
+export class OpenaiTextClientService {
   constructor(
     private httpService: HttpClientService,
     private openAIConfigService: OpenaiConfigService,
   ) {}
 
-  async speech(chatRequest: ChatRequest): Promise<Readable> {
+  async chat(chatRequest: ChatRequest): Promise<ChatResponse> {
     try {
-      return this.httpService.post<Readable>(
-        `${this.openAIConfigService.url}/audio/speech`,
+      return this.httpService.post<ChatResponse>(
+        `${this.openAIConfigService.url}/chat/completions`,
         chatRequest,
         {
           headers: {
             Authorization: `Bearer ${this.openAIConfigService.apiKey}`,
           },
-          responseType: 'stream',
         },
       );
     } catch (error) {
