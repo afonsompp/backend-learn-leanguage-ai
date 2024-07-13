@@ -21,7 +21,7 @@ import { LearnPlanModule } from '@app/user/learn/plan/learn-plan.module';
         module: LearnPlanModule,
       },
       {
-        path: 'users/learnPlans/:learnPlanId',
+        path: 'users',
         module: PracticeModule,
       },
     ]),

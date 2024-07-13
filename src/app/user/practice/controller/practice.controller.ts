@@ -22,38 +22,25 @@ export class PracticeController {
   @Post()
   async create(
     @Req() req: UserRequest,
-    @Param('learnPlanId') learnPlanId: string,
     @Body() createPracticeDto: CreatePracticeDto,
   ) {
     const practice = await this.practiceService.create(
       createPracticeDto,
-      learnPlanId,
       req.user.sub,
     );
     return new PracticeDto(practice);
   }
 
   @Get()
-  async findAllByLearnPlan(
-    @Req() req: UserRequest,
-    @Param('learnPlanId') learnPlanId: string,
-  ) {
-    const practices = await this.practiceService.findAllByLearnPlan(
-      learnPlanId,
-      req.user.sub,
-    );
+  async findAllByLearnPlan(@Req() req: UserRequest) {
+    const practices = await this.practiceService.findAllByUser(req.user.sub);
     return practices.map((practice) => new PracticeDto(practice));
   }
 
   @Get(':id')
-  async findById(
-    @Req() req: UserRequest,
-    @Param('learnPlanId') learnPlanId: string,
-    @Param('id') id: string,
-  ) {
+  async findById(@Req() req: UserRequest, @Param('id') id: string) {
     const practice = await this.practiceService.findOneByIdAndLearnPlan(
       id,
-      learnPlanId,
       req.user.sub,
     );
     return new PracticeDto(practice);
@@ -61,11 +48,7 @@ export class PracticeController {
 
   @Delete(':id')
   @HttpCode(204)
-  remove(
-    @Req() req: UserRequest,
-    @Param('learnPlanId') learnPlanId: string,
-    @Param('id') id: string,
-  ) {
-    return this.practiceService.delete(id, learnPlanId, req.user.sub);
+  remove(@Req() req: UserRequest, @Param('id') id: string) {
+    return this.practiceService.delete(id, req.user.sub);
   }
 }

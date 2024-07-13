@@ -3,7 +3,6 @@ import {
   Injectable,
   Logger,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { UserLearnPlan } from '@app/user/learn/plan/entity/user-learn-plan.entity';
 import { CreateLearnPlanDto } from '@app/user/learn/plan/dto/create-learn-plan.dto';
@@ -29,10 +28,9 @@ export class LearnPlanService {
 
   async findAll(userId: string): Promise<LearnPlanDto[]> {
     this.logger.log(`Fetching all learn plans for user: ${userId}`);
-    const user = await this.userProfileService.findOne(userId);
 
     const userLearnPlans = await this.learnPlansRepository.find({
-      where: { user },
+      where: { user: { userId } },
       relations: ['user', 'targetLanguage'],
     });
     this.logger.log(
@@ -46,7 +44,7 @@ export class LearnPlanService {
   async findOne(id: string, userId: string): Promise<UserLearnPlan> {
     this.logger.log(`Fetching learn plan with id: ${id} for user: ${userId}`);
     const learnPlan = await this.learnPlansRepository.findOne({
-      where: { id },
+      where: { id, user: { userId } },
       relations: ['user', 'targetLanguage'],
     });
     if (!learnPlan) {
@@ -54,14 +52,6 @@ export class LearnPlanService {
       throw new NotFoundException(`Learn plan with id ${id} not found`);
     }
 
-    if (learnPlan.user.userId !== userId) {
-      this.logger.error(
-        `User ${userId} is not authorized to access learn plan with id ${id}`,
-      );
-      throw new UnauthorizedException(
-        'User does not have access to this resource',
-      );
-    }
     this.logger.log(`Found learn plan with id: ${id} for user: ${userId}`);
     return learnPlan;
   }

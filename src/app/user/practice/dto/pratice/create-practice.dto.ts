@@ -4,4 +4,7 @@ export class CreatePracticeDto {
   @IsUUID()
   @IsNotEmpty()
   practiceType: string;
+  @IsUUID()
+  @IsNotEmpty()
+  learnPlan: string;
 }

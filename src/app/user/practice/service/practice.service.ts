@@ -3,7 +3,6 @@ import {
   Injectable,
   Logger,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -23,20 +22,15 @@ export class PracticeService {
     private readonly userLearnPlanService: LearnPlanService,
   ) {}
 
-  async findOneByIdAndLearnPlan(
-    id: string,
-    learnPlanId: string,
-    userId: string,
-  ): Promise<Practice> {
-    this.logger.log(
-      `Fetching practice with id: ${id} and learnPlanId: ${learnPlanId} for user: ${userId}`,
-    );
-    const learnPlan = await this.userLearnPlanService.findOne(
-      learnPlanId,
-      userId,
-    );
+  async findOneByIdAndLearnPlan(id: string, userId: string): Promise<Practice> {
+    this.logger.log(`Fetching practice with id: ${id} for user: ${userId}`);
     const practice = await this.practicesRepository.findOne({
-      where: { id, learnPlan },
+      where: {
+        id,
+        learnPlan: {
+          user: { userId },
+        },
+      },
       relations: [
         'practiceType',
         'learnPlan.user',
@@ -55,7 +49,12 @@ export class PracticeService {
   async findOneById(id: string, userId: string): Promise<Practice> {
     this.logger.log(`Fetching practice with id: ${id} for user: ${userId}`);
     const practice = await this.practicesRepository.findOne({
-      where: { id },
+      where: {
+        id,
+        learnPlan: {
+          user: { userId },
+        },
+      },
       relations: [
         'practiceType',
         'learnPlan.targetLanguage',
@@ -68,64 +67,41 @@ export class PracticeService {
       this.logger.warn(`Practice with id ${id} not found`);
       throw new NotFoundException(`Practice with id ${id} not found`);
     }
-    if (practice.learnPlan.user.userId !== userId) {
-      this.logger.warn(
-        `User ${userId} is not authorized to access practice with id ${id}`,
-      );
-      throw new UnauthorizedException(
-        'User does not have access to this resource',
-      );
-    }
     this.logger.log(`Found practice with id: ${id} for user: ${userId}`);
     return practice;
   }
 
-  async findAllByLearnPlan(
-    learnPlanId: string,
-    userId: string,
-  ): Promise<Practice[]> {
-    this.logger.log(
-      `Fetching all practices for learnPlanId: ${learnPlanId} and user: ${userId}`,
-    );
-    const learnPlan = await this.userLearnPlanService.findOne(
-      learnPlanId,
-      userId,
-    );
-
+  async findAllByUser(userId: string): Promise<Practice[]> {
+    this.logger.log(`Fetching all practices for user: ${userId}`);
     const practices = await this.practicesRepository.find({
-      where: { learnPlan },
-      relations: ['practiceType'],
+      where: {
+        learnPlan: {
+          user: { userId },
+        },
+      },
+      relations: ['practiceType', 'learnPlan.targetLanguage', 'learnPlan.user'],
     });
     if (!practices || practices.length === 0) {
-      this.logger.error(
-        `Practices not found for userId: ${userId} and learnPlanId: ${learnPlanId}`,
-      );
-      throw new NotFoundException(
-        `Practices not found for userId ${userId} and learnPlanId ${learnPlanId}`,
-      );
+      this.logger.error(`Practices not found for userId: ${userId}`);
+      throw new NotFoundException(`Practices not found for userId ${userId}`);
     }
-    practices.forEach((practice) => (practice.learnPlan = learnPlan));
-
-    this.logger.log(
-      `Found ${practices.length} practices for learnPlanId: ${learnPlanId} and user: ${userId}`,
-    );
+    this.logger.log(`Found ${practices.length} practices for user: ${userId}`);
     return practices;
   }
 
   async create(
     createPracticeDto: CreatePracticeDto,
-    learnPlanId: string,
     userId: string,
   ): Promise<Practice> {
-    const { practiceType } = createPracticeDto;
+    const { practiceType, learnPlan } = createPracticeDto;
     this.logger.log(
-      `Creating practice for learnPlanId: ${learnPlanId}, user: ${userId}, practiceType: ${practiceType}`,
+      `Creating practice for learnPlanId: ${learnPlan}, user: ${userId}, practiceType: ${practiceType}`,
     );
 
     const practiceTypeEntity =
       await this.practiceTypeService.findOne(practiceType);
     const learnPlanEntity = await this.userLearnPlanService.findOne(
-      learnPlanId,
+      learnPlan,
       userId,
     );
 
@@ -138,7 +114,7 @@ export class PracticeService {
 
     if (existingPractice) {
       this.logger.error(
-        `Practice with practiceType ${practiceType} and learnPlanId ${learnPlanId} already exists`,
+        `Practice with practiceType ${practiceType} and learnPlanId ${learnPlan} already exists`,
       );
       throw new ConflictException(
         'Practice with the provided practiceType and learnPlan already exists',
@@ -152,20 +128,19 @@ export class PracticeService {
 
     await this.practicesRepository.save(practice);
     this.logger.log(
-      `Created practice for learnPlanId: ${learnPlanId}, user: ${userId}, practiceType: ${practiceType}`,
+      `Created practice for learnPlanId: ${learnPlan}, user: ${userId}, practiceType: ${practiceType}`,
     );
     return practice;
   }
 
-  async delete(id: string, learnPlanId: string, userId: string): Promise<void> {
-    this.logger.log(
-      `Deleting practice with id: ${id}, learnPlanId: ${learnPlanId}, userId: ${userId}`,
-    );
-    const learnPlan = await this.userLearnPlanService.findOne(
-      learnPlanId,
-      userId,
-    );
-    const result = await this.practicesRepository.delete({ id, learnPlan });
+  async delete(id: string, userId: string): Promise<void> {
+    this.logger.log(`Deleting practice with id: ${id}, userId: ${userId}`);
+    const result = await this.practicesRepository.delete({
+      id,
+      learnPlan: {
+        user: { userId },
+      },
+    });
     if (result.affected === 0) {
       this.logger.error(`Practice with id ${id} not found`);
       throw new NotFoundException(`Practice with id ${id} not found`);
