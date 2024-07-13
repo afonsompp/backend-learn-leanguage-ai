@@ -13,7 +13,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         username: configService.get<string>('DATABASE_USERNAME'),
         password: configService.get<string>('DATABASE_PASSWORD'),
         database: configService.get<string>('DATABASE_NAME'),
-        entities: [__dirname + '/../../**/*.entity{.ts,.js}'], // Adjust entity path as per your project structure
+        entities: [__dirname + '/../../../**/*.entity{.ts,.js}'], // Adjust entity path as per your project structure
         synchronize: configService.get<boolean>('TYPEORM_SYNC', false),
         logging: configService.get<boolean>('TYPEORM_LOGGING', false),
       }),
