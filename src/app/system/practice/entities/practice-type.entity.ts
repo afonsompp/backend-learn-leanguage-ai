@@ -24,6 +24,12 @@ export class PracticeType {
   @Column({ nullable: false, default: false })
   stream: boolean;
 
+  @Column({ nullable: false, default: 'text' })
+  responseType: string;
+
+  @Column('jsonb', { nullable: true })
+  responseSchema: object;
+
   @Column({ nullable: false, default: 256 })
   maxTokens: number;
 }

@@ -1,7 +1,6 @@
-import { KnowledgeLevel } from '@app/user/vocabulary/entity/knowledge-level';
+import { KnowledgeRating } from '@app/user/vocabulary/entity/knowledge-rating';
 
 export class AddWordDto {
   word: string;
-  level: KnowledgeLevel;
-  practiceContentId: string;
+  rating?: KnowledgeRating;
 }

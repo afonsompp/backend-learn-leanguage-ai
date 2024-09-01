@@ -44,7 +44,7 @@ export class LearnPlanService {
   async findOne(id: string, userId: string): Promise<UserLearnPlan> {
     this.logger.log(`Fetching learn plan with id: ${id} for user: ${userId}`);
     const learnPlan = await this.learnPlansRepository.findOne({
-      where: { id, user: { userId } },
+      where: { id, user: { userId: userId } },
       relations: ['user', 'targetLanguage'],
     });
     if (!learnPlan) {

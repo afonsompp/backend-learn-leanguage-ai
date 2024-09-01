@@ -5,29 +5,31 @@ import {
   Index,
   ManyToOne,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
-import { KnowledgeLevel } from '@app/user/vocabulary/entity/knowledge-level';
-import { PracticeContent } from '@app/user/practice/entities/practice-content.entity';
+import { KnowledgeRating } from '@app/user/vocabulary/entity/knowledge-rating';
+import { UserLearnPlan } from '@app/user/learn/plan/entity/user-learn-plan.entity';
 
 @Entity()
+@Unique(['word', 'learnPlan'])
 export class Word {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Index()
-  @Column({ unique: true, nullable: false })
+  @Column({ nullable: false })
   word: string;
 
   @Column({
     type: 'enum',
-    enum: KnowledgeLevel,
-    default: KnowledgeLevel.UNKNOWN,
+    enum: KnowledgeRating,
+    default: KnowledgeRating.UNKNOWN,
   })
-  level: KnowledgeLevel;
+  rating: KnowledgeRating;
 
-  @ManyToOne(() => PracticeContent)
-  practiceContent: PracticeContent;
+  @ManyToOne(() => UserLearnPlan)
+  learnPlan: UserLearnPlan;
 
   @CreateDateColumn()
   createdAt: Date;

@@ -8,6 +8,8 @@ export class PracticeTypeDto {
   temperature: number;
   topP: number;
   stream: boolean;
+  responseType: string;
+  responseSchema: object;
 
   constructor(practiceType: PracticeType) {
     this.id = practiceType.id;
@@ -17,5 +19,7 @@ export class PracticeTypeDto {
     this.temperature = practiceType.temperature;
     this.topP = practiceType.topP;
     this.stream = practiceType.stream;
+    this.responseType = practiceType.responseType;
+    this.responseSchema = practiceType.responseSchema;
   }
 }

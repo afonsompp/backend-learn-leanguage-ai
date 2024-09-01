@@ -4,6 +4,7 @@ import { AuthorizationModule } from '@core/security/auth/authorization.module';
 import { RouterModule } from '@nestjs/core';
 import { PracticeModule } from '@app/user/practice/practice.module';
 import { LearnPlanModule } from '@app/user/learn/plan/learn-plan.module';
+import { VocabularyModule } from '@app/user/vocabulary/vocabulary.module';
 
 @Module({
   imports: [
@@ -23,6 +24,10 @@ import { LearnPlanModule } from '@app/user/learn/plan/learn-plan.module';
       {
         path: 'users',
         module: PracticeModule,
+      },
+      {
+        path: 'users',
+        module: VocabularyModule,
       },
     ]),
   ],

@@ -15,7 +15,7 @@ import { CreateLearnPlanDto } from '@app/user/learn/plan/dto/create-learn-plan.d
 import { UserRequest } from '@core/security/auth/entity/user-request.interface';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
-@Controller('learnPlans')
+@Controller('learn/plans')
 @ApiBearerAuth()
 export class LearnPlansController {
   constructor(private readonly learnPlansService: LearnPlanService) {}

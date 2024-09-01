@@ -1,4 +1,4 @@
-export enum KnowledgeLevel {
+export enum KnowledgeRating {
   UNKNOWN = 0,
   NEW = 1,
   REORGANIZED = 2,

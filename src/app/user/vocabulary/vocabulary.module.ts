@@ -2,15 +2,14 @@ import { Module } from '@nestjs/common';
 import { VocabularyController } from './controller/vocabulary.controller';
 import { WordService } from './service/word.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Language } from '@app/system/language/entities/language.entity';
-import { UserProfile } from '@app/user/profile/entity/user-profile.entity';
-import { LanguageModule } from '@app/system/language/language.module';
 import { AuthorizationModule } from '@core/security/auth/authorization.module';
+import { Word } from '@app/user/vocabulary/entity/word.entity';
+import { LearnPlanModule } from '@app/user/learn/plan/learn-plan.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserProfile, Language]),
-    LanguageModule,
+    TypeOrmModule.forFeature([Word]),
+    LearnPlanModule,
     AuthorizationModule,
   ],
   controllers: [VocabularyController],
