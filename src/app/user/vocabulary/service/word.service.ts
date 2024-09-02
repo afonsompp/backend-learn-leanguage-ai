@@ -2,7 +2,6 @@ import { ConflictException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { Word } from '@app/user/vocabulary/entity/word.entity';
-import { AddWordDto } from '@app/user/vocabulary/dto/add-word.dto';
 import { WordDto } from '@app/user/vocabulary/dto/word.dto';
 import { KnowledgeRating } from '@app/user/vocabulary/entity/knowledge-rating';
 import { LearnPlanService } from '@app/user/learn/plan/service/user-learn-plan.service';
@@ -16,32 +15,53 @@ export class WordService {
     private wordRepository: Repository<Word>,
     private readonly learnPlanService: LearnPlanService,
   ) {}
-  async addOrUpdateWord(
-    addWordDto: AddWordDto,
+  async create(
+    word: string,
     userId: string,
     learnPlanId: string,
   ): Promise<WordDto> {
-    const { word, rating } = addWordDto;
-
     this.logger.log(`Creating word: ${word}`);
+    const learnPlan = await this.learnPlanService.findOne(learnPlanId, userId);
 
-    if (await this.wordRepository.findOne({ where: { word } })) {
+    const existentWord = await this.wordRepository.findOne({
+      where: { word: word, learnPlan: learnPlan },
+    });
+    if (existentWord) {
       this.logger.warn(`word already exists: ${word}`);
       throw new ConflictException('Word already exists for this vocabulary');
     }
 
-    const learnPlan = await this.learnPlanService.findOne(learnPlanId, userId);
-
     const createdWord = this.wordRepository.create({
       word,
-      rating,
       learnPlan,
     });
 
     await this.wordRepository.save(createdWord);
 
-    this.logger.log(`Created vocabulary for word: ${word}`);
+    this.logger.log(`word: ${word} added into vocabulary`);
     return new WordDto(createdWord);
+  }
+
+  async update(
+    wordId: string,
+    rating: KnowledgeRating,
+    userId: string,
+    learnPlanId: string,
+  ): Promise<WordDto> {
+    this.logger.log(`Updating rating tp word id: ${wordId}`);
+
+    const learnPlan = await this.learnPlanService.findOne(learnPlanId, userId);
+
+    const existentWord = await this.wordRepository.findOne({
+      where: { id: wordId, learnPlan: learnPlan },
+    });
+
+    existentWord.rating = rating;
+
+    await this.wordRepository.save(existentWord);
+
+    this.logger.log(`rating to: ${existentWord.word} updated into vocabulary`);
+    return new WordDto(existentWord);
   }
 
   async findUserVocabulary(
