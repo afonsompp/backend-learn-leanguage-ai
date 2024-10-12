@@ -6,6 +6,7 @@ import { GenerateStoryTextDto } from '@app/features/story/generator/dto/generate
 import { StoryTextProcessorService } from '@app/features/story/generator/service/story-text-processor.service';
 import { WordService } from '@app/user/vocabulary/service/word.service';
 import { UserLearnPlan } from '@app/user/learn/plan/entity/user-learn-plan.entity';
+import { ChatResponse } from '@shared/ai/openai/text/interface/chat-response';
 
 @Injectable()
 export class StoryTextGeneratorService {
@@ -21,7 +22,7 @@ export class StoryTextGeneratorService {
   async generate(
     request: GenerateStoryTextDto,
     practice: Practice,
-  ): Promise<string> {
+  ): Promise<ChatResponse> {
     this.logger.log(`Generating story text for user`);
 
     const chatRequest = await this.buildChatRequest(practice, request);
@@ -34,7 +35,7 @@ export class StoryTextGeneratorService {
     }
     this.logger.log(`Story generated with success`);
 
-    return response.choices[0].message.content;
+    return response;
   }
   private async buildChatRequest(
     practice: Practice,

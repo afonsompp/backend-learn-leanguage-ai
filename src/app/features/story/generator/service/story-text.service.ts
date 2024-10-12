@@ -5,6 +5,7 @@ import { PracticeService } from '@app/user/practice/service/practice.service';
 import { StoryTextGeneratorService } from '@app/features/story/generator/service/story-text-generator.service';
 import { StoryTextProcessorService } from '@app/features/story/generator/service/story-text-processor.service';
 import { StoryTextPreProcessorService } from '@app/features/story/generator/service/story-text-pre-processor.service';
+import { CreatePracticeContentDto } from '@app/user/practice/dto/content/create-practice-content.dto';
 
 @Injectable()
 export class StoryTextService {
@@ -29,15 +30,32 @@ export class StoryTextService {
       practice,
     );
 
-    const storyText = JSON.parse(generatedStory);
+    const storyText = JSON.parse(generatedStory.choices[0].message.content);
+
+    const createPracticeContent: CreatePracticeContentDto = {
+      input: request.theme,
+      output: storyText,
+      practiceId: request.practiceId,
+      totalTokens: generatedStory.usage.total_tokens,
+    };
+
+    const practiceContent = await this.practiceContentService.create(
+      createPracticeContent,
+      userId,
+    );
 
     const preProcessedText = this.storyTextPreProcessorService.processText(
       storyText.story.content,
     );
 
-    return this.storyTextProcessorService.processStoryText(
+    const processedText = await this.storyTextProcessorService.processStoryText(
       preProcessedText,
       practice,
     );
+
+    return {
+      id: practiceContent.id,
+      story: processedText,
+    };
   }
 }
