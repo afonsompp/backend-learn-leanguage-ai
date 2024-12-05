@@ -1,7 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { HttpClientService } from '@core/client/service/http-client.service';
 import { OpenaiConfigService } from '@config/openai.config.service';
-import { Readable } from 'typeorm/browser/platform/BrowserPlatformTools';
+import { Readable } from 'stream';
 
 @Injectable()
 export class OpenaiTextToSpeechService {
@@ -12,7 +12,7 @@ export class OpenaiTextToSpeechService {
 
   async speech(speechRequest: SpeechRequest): Promise<Readable> {
     try {
-      return this.httpService.post<Readable>(
+      return this.httpService.post(
         `${this.openAIConfigService.url}/audio/speech`,
         speechRequest,
         {

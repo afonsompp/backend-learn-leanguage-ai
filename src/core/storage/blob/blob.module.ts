@@ -21,6 +21,6 @@ import { BlobService } from './service/blob.service';
     },
     BlobService,
   ],
-  exports: [S3Client],
+  exports: [S3Client, BlobService],
 })
 export class BlobModule {}

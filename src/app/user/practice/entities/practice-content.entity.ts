@@ -16,7 +16,7 @@ export class PracticeContent {
   input: string;
 
   @Column('jsonb', { nullable: true })
-  output: object;
+  output: Record<string, any>;
 
   @Column({ nullable: true })
   totalTokens: number;

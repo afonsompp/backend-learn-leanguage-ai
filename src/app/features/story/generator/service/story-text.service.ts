@@ -58,4 +58,25 @@ export class StoryTextService {
       story: processedText,
     };
   }
+
+  async getStory(storyId: string, userId: string) {
+    const practiceContent = await this.practiceContentService.findOne(
+      storyId,
+      userId,
+    );
+
+    const preProcessedText = this.storyTextPreProcessorService.processText(
+      practiceContent.output.story.content,
+    );
+
+    const processedText = await this.storyTextProcessorService.processStoryText(
+      preProcessedText,
+      practiceContent.practice,
+    );
+
+    return {
+      id: practiceContent.id,
+      story: processedText,
+    };
+  }
 }
