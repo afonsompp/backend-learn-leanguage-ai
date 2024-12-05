@@ -28,7 +28,7 @@ export class PracticeType {
   responseType: string;
 
   @Column('jsonb', { nullable: true })
-  responseSchema: object;
+  responseSchema: Record<string, any>;
 
   @Column({ nullable: false, default: 256 })
   maxTokens: number;

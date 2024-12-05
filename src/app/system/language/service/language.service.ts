@@ -76,7 +76,7 @@ export class LanguageService {
 
     const updatedLanguage = Object.assign(language, updateLanguageDto);
 
-    await this.languageRepository.save(updateLanguageDto);
+    await this.languageRepository.update({ id }, updateLanguageDto);
     this.logger.log(`Updated language with id: ${id}`);
     return new LanguageDto(updatedLanguage);
   }

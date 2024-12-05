@@ -1,11 +1,4 @@
-import {
-  IsJSON,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-  Max,
-  Min,
-} from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, Max, Min } from 'class-validator';
 
 export class UpdatePracticeTypeDto {
   @IsString()
@@ -26,8 +19,8 @@ export class UpdatePracticeTypeDto {
   @IsNotEmpty()
   responseType: string;
 
-  @IsJSON()
-  responseSchema: object;
+  @IsNotEmpty()
+  responseSchema: Record<string, any>;
 
   @IsNumber()
   @IsNotEmpty()

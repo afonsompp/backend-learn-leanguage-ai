@@ -9,7 +9,7 @@ export class PracticeTypeDto {
   topP: number;
   stream: boolean;
   responseType: string;
-  responseSchema: object;
+  responseSchema: Record<string, any>;
 
   constructor(practiceType: PracticeType) {
     this.id = practiceType.id;
