@@ -55,14 +55,13 @@ describe('UserProfileController', () => {
 
   describe('create', () => {
     it('should create a new profile', async () => {
-      const dto: CreateProfileDto = { nativeLanguage: 'en-US', userId: '1212' };
+      const dto: CreateProfileDto = { nativeLanguage: 'en-US' };
       const result = new ProfileDto(user);
       mockUserProfileService.create.mockReturnValue(Promise.resolve(result));
 
       expect(
         await controller.create(mockUserRequest as UserRequest, dto),
       ).toEqual(result);
-      expect(dto.userId).toEqual(mockUserRequest.user.sub);
       expect(service.create).toHaveBeenCalledWith(dto);
     });
   });

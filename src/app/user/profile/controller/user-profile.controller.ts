@@ -26,9 +26,10 @@ export class UserProfileController {
     @Req() req: UserRequest,
     @Body() createProfileDto: CreateProfileDto,
   ) {
-    createProfileDto.userId = req.user.sub;
-
-    return this.userProfileService.create(createProfileDto);
+    return this.userProfileService.create(
+      createProfileDto.nativeLanguage,
+      req.user.sub,
+    );
   }
 
   @Patch()

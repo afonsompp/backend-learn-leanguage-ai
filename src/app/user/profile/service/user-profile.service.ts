@@ -8,7 +8,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserProfile } from '@app/user/profile/entity/user-profile.entity';
 import { LanguageService } from '@app/system/language/service/language.service';
-import { CreateProfileDto } from '@app/user/profile/dto/create-profile.dto';
 import { UpdateProfileDto } from '@app/user/profile/dto/update-profile.dto';
 import { ProfileDto } from '@app/user/profile/dto/profile.dto';
 
@@ -36,9 +35,7 @@ export class UserProfileService {
     return profile;
   }
 
-  async create(createProfileDto: CreateProfileDto): Promise<ProfileDto> {
-    const { nativeLanguage, userId } = createProfileDto;
-
+  async create(nativeLanguage: string, userId: string): Promise<ProfileDto> {
     this.logger.log(`Creating profile for userId: ${userId}`);
 
     if (
