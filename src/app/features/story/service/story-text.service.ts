@@ -2,15 +2,15 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PracticeService } from '@app/user/practice/service/practice.service';
 import { Practice } from '@app/user/practice/entities/practice.entity';
 import { OpenaiTextClientService } from '@shared/ai/openai/text/service/openai-text-client.service';
-import { GenerateStoryTextDto } from '@app/features/story/generator/dto/generate-story-text.dto';
-import { StoryTextProcessorService } from '@app/features/story/generator/service/story-text-processor.service';
 import { WordService } from '@app/user/vocabulary/service/word.service';
 import { UserLearnPlan } from '@app/user/learn/plan/entity/user-learn-plan.entity';
 import { ChatResponse } from '@shared/ai/openai/text/interface/chat-response';
+import { StoryTextProcessorService } from '@app/features/story/service/story-text-processor.service';
+import { GenerateStoryTextDto } from '@app/features/story/dto/generate-story-text.dto';
 
 @Injectable()
-export class StoryTextGeneratorService {
-  private readonly logger = new Logger(StoryTextGeneratorService.name);
+export class StoryTextService {
+  private readonly logger = new Logger(StoryTextService.name);
 
   constructor(
     private readonly practiceService: PracticeService,

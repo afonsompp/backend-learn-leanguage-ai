@@ -1,10 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
+
+import { Practice } from '@app/user/practice/entities/practice.entity';
+import { WordService } from '@app/user/vocabulary/service/word.service';
 import {
   ProcessedText,
   SentenceWord,
-} from '@app/features/story/generator/types/sentence.type';
-import { Practice } from '@app/user/practice/entities/practice.entity';
-import { WordService } from '@app/user/vocabulary/service/word.service';
+} from '@app/features/story/types/sentence.type';
 
 @Injectable()
 export class StoryTextProcessorService {

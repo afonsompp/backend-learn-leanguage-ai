@@ -1,0 +1,39 @@
+import { Injectable, Logger } from '@nestjs/common';
+import { PracticeContentService } from '@app/user/practice/service/practice-content.service';
+import { OpenaiTextToSpeechService } from '@shared/ai/openai/audio/speech/service/openai-text-to-speech.service';
+import { BlobService } from '@core/storage/blob/service/blob.service';
+import { PracticeContent } from '@app/user/practice/entities/practice-content.entity';
+import { Readable } from 'stream';
+
+@Injectable()
+export class StoryAudioService {
+  private readonly logger = new Logger(StoryAudioService.name);
+
+  constructor(
+    private readonly practiceContentService: PracticeContentService,
+    private readonly text2SpeechService: OpenaiTextToSpeechService,
+    private readonly blobService: BlobService,
+  ) {}
+
+  async generateAudio(practiceContent: PracticeContent) {
+    this.text2SpeechService
+      .speech({
+        model: 'tts-1',
+        input: practiceContent.output.story.content,
+        voice: 'alloy',
+      })
+      .then((result: Readable) => {
+        this.blobService.uploadObject({
+          key: this.getAudioKey(practiceContent),
+          body: result,
+        });
+      });
+  }
+
+  getAudioKey(practiceContent: PracticeContent): string {
+    const user = practiceContent.practice.learnPlan.user.userId;
+    const learnPlan = practiceContent.practice.learnPlan.id;
+    const practice = practiceContent.practice.id;
+    return `user/${user}/learn-plan/${learnPlan}/practice/${practice}/practice-content/${practiceContent.id}.mp3`;
+  }
+}

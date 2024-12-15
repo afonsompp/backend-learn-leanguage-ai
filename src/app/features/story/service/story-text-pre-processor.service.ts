@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import {
   Sentence,
   SentenceWord,
-} from '@app/features/story/generator/types/sentence.type';
+} from '@app/features/story/types/sentence.type';
 
 @Injectable()
 export class StoryTextPreProcessorService {

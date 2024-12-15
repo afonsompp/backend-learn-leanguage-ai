@@ -24,6 +24,9 @@ export class PracticeContent {
   @ManyToOne(() => Practice, (practice) => practice.contentHistory)
   practice: Practice;
 
+  @Column({ default: 'IN_PROGRESS' })
+  audioEventStatus: string;
+
   @CreateDateColumn()
   createdAt: Date;
 }

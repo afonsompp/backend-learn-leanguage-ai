@@ -10,6 +10,7 @@ import { PracticeContent } from '@app/user/practice/entities/practice-content.en
 import { PracticeContentDto } from '@app/user/practice/dto/content/practice-content.dto';
 import { CreatePracticeContentDto } from '@app/user/practice/dto/content/create-practice-content.dto';
 import { PracticeService } from '@app/user/practice/service/practice.service';
+import { UpdatePracticeContentDto } from '@app/user/practice/dto/content/update-practice-content.dto';
 
 @Injectable()
 export class PracticeContentService {
@@ -38,6 +39,27 @@ export class PracticeContentService {
 
     await this.practiceContentRepository.save(practiceContent);
     this.logger.log(`Created practice content with id: ${practiceContent.id}`);
+    return new PracticeContentDto(practiceContent);
+  }
+
+  async update(
+    updatePracticeContentDto: UpdatePracticeContentDto,
+    practiceContentId: string,
+    userId: string,
+  ): Promise<PracticeContentDto> {
+    const practiceContent = await this.findOne(practiceContentId, userId);
+
+    this.logger.log(`Update practice content`);
+
+    practiceContent.audioEventStatus =
+      updatePracticeContentDto.audioEventStatus;
+
+    await this.practiceContentRepository.update(
+      { id: practiceContentId },
+      practiceContent,
+    );
+
+    this.logger.log(`practice content with id: ${practiceContent.id} updated`);
     return new PracticeContentDto(practiceContent);
   }
 

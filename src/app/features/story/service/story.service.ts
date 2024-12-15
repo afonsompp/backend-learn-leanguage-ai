@@ -1,22 +1,28 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PracticeContentService } from '@app/user/practice/service/practice-content.service';
-import { GenerateStoryTextDto } from '@app/features/story/generator/dto/generate-story-text.dto';
 import { PracticeService } from '@app/user/practice/service/practice.service';
-import { StoryTextGeneratorService } from '@app/features/story/generator/service/story-text-generator.service';
-import { StoryTextProcessorService } from '@app/features/story/generator/service/story-text-processor.service';
-import { StoryTextPreProcessorService } from '@app/features/story/generator/service/story-text-pre-processor.service';
 import { CreatePracticeContentDto } from '@app/user/practice/dto/content/create-practice-content.dto';
+import { BlobService } from '@core/storage/blob/service/blob.service';
+import { StoryTextService } from '@app/features/story/service/story-text.service';
+import { StoryTextProcessorService } from '@app/features/story/service/story-text-processor.service';
+import { StoryTextPreProcessorService } from '@app/features/story/service/story-text-pre-processor.service';
+import { StoryAudioService } from '@app/features/story/service/story-audio.service';
+import { GenerateStoryTextDto } from '@app/features/story/dto/generate-story-text.dto';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
-export class StoryTextService {
-  private readonly logger = new Logger(StoryTextService.name);
+export class StoryService {
+  private readonly logger = new Logger(StoryService.name);
 
   constructor(
     private readonly practiceContentService: PracticeContentService,
     private readonly practiceService: PracticeService,
-    private readonly generateTextService: StoryTextGeneratorService,
+    private readonly generateTextService: StoryTextService,
     private readonly storyTextProcessorService: StoryTextProcessorService,
     private readonly storyTextPreProcessorService: StoryTextPreProcessorService,
+    private readonly storyAudioService: StoryAudioService,
+    private readonly blobService: BlobService,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   async createStory(request: GenerateStoryTextDto, userId: string) {
@@ -43,6 +49,11 @@ export class StoryTextService {
       createPracticeContent,
       userId,
     );
+
+    this.eventEmitter.emit('story.created', {
+      storyId: practiceContent.id,
+      userId,
+    });
 
     const preProcessedText = this.storyTextPreProcessorService.processText(
       storyText.story.content,
@@ -78,5 +89,27 @@ export class StoryTextService {
       id: practiceContent.id,
       story: processedText,
     };
+  }
+
+  async getStoryAudio(storyId, userId: string) {
+    const practiceContent = await this.practiceContentService.findOne(
+      storyId,
+      userId,
+    );
+
+    const objectExists = await this.blobService.objectExists(
+      this.storyAudioService.getAudioKey(practiceContent),
+    );
+
+    if (!objectExists) {
+      throw new NotFoundException('Audio not found, try again later');
+    }
+
+    const url = await this.blobService.getFileUrl({
+      key: this.storyAudioService.getAudioKey(practiceContent),
+      urlExpiresIn: 600,
+    });
+
+    return { url };
   }
 }

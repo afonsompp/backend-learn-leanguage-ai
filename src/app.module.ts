@@ -11,9 +11,11 @@ import { ScopesGuard } from '@core/security/scopes/scopes.guard';
 import { OAuthGuard } from '@core/security/auth/guard/oauth.guard';
 import { HttpClientModule } from '@core/client/http-client.module';
 import { StorageModule } from '@core/storage/storage.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
+    EventEmitterModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [PropertiesConfig],

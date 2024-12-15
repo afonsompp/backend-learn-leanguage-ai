@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import {
+  DeleteObjectCommand,
   GetObjectCommand,
   HeadObjectCommand,
   S3Client,
@@ -90,5 +91,25 @@ export class BlobService {
       this.logger.error(`Failed to check if object exists`);
       throw error;
     }
+  }
+
+  async deleteObject(key: string): Promise<boolean> {
+    this.logger.log(`Check if object: ${this.config.bucket}/${key} exists`);
+
+    if (await this.objectExists(key)) {
+      try {
+        await this.s3Client.send(
+          new DeleteObjectCommand({
+            Bucket: this.config.bucket,
+            Key: key,
+          }),
+        );
+        return true;
+      } catch (error) {
+        this.logger.error(`Failed to check if object exists`);
+        throw error;
+      }
+    }
+    return false;
   }
 }
