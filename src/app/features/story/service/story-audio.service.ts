@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PracticeContentService } from '@app/user/practice/service/practice-content.service';
 import { OpenaiTextToSpeechService } from '@shared/ai/openai/audio/speech/service/openai-text-to-speech.service';
 import { BlobService } from '@core/storage/blob/service/blob.service';
@@ -30,7 +30,24 @@ export class StoryAudioService {
       });
   }
 
-  getAudioKey(practiceContent: PracticeContent): string {
+  async getStoryAudio(practiceContent: PracticeContent) {
+    const objectExists = await this.blobService.objectExists(
+      this.getAudioKey(practiceContent),
+    );
+
+    if (!objectExists) {
+      throw new NotFoundException('Audio cannot be found');
+    }
+
+    const url = await this.blobService.getFileUrl({
+      key: this.getAudioKey(practiceContent),
+      urlExpiresIn: 600,
+    });
+
+    return { url };
+  }
+
+  private getAudioKey(practiceContent: PracticeContent): string {
     const user = practiceContent.practice.learnPlan.user.userId;
     const learnPlan = practiceContent.practice.learnPlan.id;
     const practice = practiceContent.practice.id;

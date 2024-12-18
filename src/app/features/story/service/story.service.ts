@@ -1,4 +1,10 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { PracticeContentService } from '@app/user/practice/service/practice-content.service';
 import { PracticeService } from '@app/user/practice/service/practice.service';
 import { CreatePracticeContentDto } from '@app/user/practice/dto/content/create-practice-content.dto';
@@ -9,6 +15,7 @@ import { StoryTextPreProcessorService } from '@app/features/story/service/story-
 import { StoryAudioService } from '@app/features/story/service/story-audio.service';
 import { GenerateStoryTextDto } from '@app/features/story/dto/generate-story-text.dto';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { PracticeContent } from '@app/user/practice/entities/practice-content.entity';
 
 @Injectable()
 export class StoryService {
@@ -91,25 +98,49 @@ export class StoryService {
     };
   }
 
-  async getStoryAudio(storyId, userId: string) {
+  async getStoryAudio(
+    storyId: string,
+    userId: string,
+  ): Promise<{ url: string }> {
     const practiceContent = await this.practiceContentService.findOne(
       storyId,
       userId,
     );
 
-    const objectExists = await this.blobService.objectExists(
-      this.storyAudioService.getAudioKey(practiceContent),
-    );
+    return this.handleAudioEventStatus(practiceContent);
+  }
 
-    if (!objectExists) {
-      throw new NotFoundException('Audio not found, try again later');
+  private async handleAudioEventStatus(
+    practiceContent: PracticeContent,
+  ): Promise<{ url: string }> {
+    switch (practiceContent.audioEventStatus) {
+      case 'COMPLETED':
+        try {
+          return this.storyAudioService.getStoryAudio(practiceContent);
+        } catch (e) {
+          await this.handleAudioEventStatus(e);
+          break;
+        }
+
+      case 'IN_PROGRESS':
+        throw new NotFoundException(
+          'Audio still in processing, try again later',
+        );
+
+      case 'ERROR':
+        throw new UnprocessableEntityException('Error in audio processing');
+
+      default:
+        throw new InternalServerErrorException('Unknown state to audio event');
     }
+  }
 
-    const url = await this.blobService.getFileUrl({
-      key: this.storyAudioService.getAudioKey(practiceContent),
-      urlExpiresIn: 600,
-    });
-
-    return { url };
+  private handleBlobServiceError(error: unknown): never {
+    if (error instanceof NotFoundException) {
+      throw new InternalServerErrorException(
+        'Unknown error during audio retrieving',
+      );
+    }
+    throw error;
   }
 }
