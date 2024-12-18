@@ -118,7 +118,7 @@ export class StoryService {
         try {
           return this.storyAudioService.getStoryAudio(practiceContent);
         } catch (e) {
-          await this.handleAudioEventStatus(e);
+          await this.handleBlobServiceError(e);
           break;
         }
 
