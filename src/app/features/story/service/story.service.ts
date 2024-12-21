@@ -8,7 +8,6 @@ import {
 import { PracticeContentService } from '@app/user/practice/service/practice-content.service';
 import { PracticeService } from '@app/user/practice/service/practice.service';
 import { CreatePracticeContentDto } from '@app/user/practice/dto/content/create-practice-content.dto';
-import { BlobService } from '@core/storage/blob/service/blob.service';
 import { StoryTextService } from '@app/features/story/service/story-text.service';
 import { StoryTextProcessorService } from '@app/features/story/service/story-text-processor.service';
 import { StoryTextPreProcessorService } from '@app/features/story/service/story-text-pre-processor.service';
@@ -28,7 +27,6 @@ export class StoryService {
     private readonly storyTextProcessorService: StoryTextProcessorService,
     private readonly storyTextPreProcessorService: StoryTextPreProcessorService,
     private readonly storyAudioService: StoryAudioService,
-    private readonly blobService: BlobService,
     private eventEmitter: EventEmitter2,
   ) {}
 
@@ -108,6 +106,19 @@ export class StoryService {
     );
 
     return this.handleAudioEventStatus(practiceContent);
+  }
+
+  async deleteStory(storyId: string, userId: string) {
+    const practiceContent = await this.practiceContentService.findOne(
+      storyId,
+      userId,
+    );
+
+    await this.storyAudioService.deleteStoryAudio(practiceContent);
+
+    this.practiceContentService.remove(storyId, userId).then(() => {
+      this.logger.log('practice content was successful removed');
+    });
   }
 
   private async handleAudioEventStatus(

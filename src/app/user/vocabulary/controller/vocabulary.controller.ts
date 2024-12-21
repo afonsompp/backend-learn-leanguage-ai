@@ -27,7 +27,7 @@ export class VocabularyController {
       req.user.sub,
     );
   }
-  @Patch(':id')
+  @Patch('words/:id')
   @HttpCode(200)
   update(
     @Req() req: UserRequest,

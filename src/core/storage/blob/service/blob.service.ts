@@ -106,7 +106,7 @@ export class BlobService {
         );
         return true;
       } catch (error) {
-        this.logger.error(`Failed to check if object exists`);
+        this.logger.error(`Failed to delete object`);
         throw error;
       }
     }

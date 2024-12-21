@@ -14,7 +14,7 @@ import { UpdatePracticeTypeDto } from '@app/system/practice/dto/update-practice-
 import { PracticeTypeDto } from '@app/system/practice/dto/practice-type.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
-@Controller('practiceTypes')
+@Controller('practice/types')
 @ApiBearerAuth()
 export class PracticeTypeController {
   constructor(private readonly practiceTypeService: PracticeTypeService) {}

@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  Req,
+} from '@nestjs/common';
 import { UserRequest } from '@core/security/auth/entity/user-request.interface';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { StoryService } from '@app/features/story/service/story.service';
@@ -28,5 +37,15 @@ export class StoryController {
   async getStoryAudio(@Req() req: UserRequest, @Param() params: GetStoryDto) {
     const userId = req.user.sub;
     return this.storyService.getStoryAudio(params.id, userId);
+  }
+
+  @HttpCode(204)
+  @Delete(':id')
+  async deleteStoryAudio(
+    @Req() req: UserRequest,
+    @Param() params: GetStoryDto,
+  ) {
+    const userId = req.user.sub;
+    await this.storyService.deleteStory(params.id, userId);
   }
 }

@@ -56,8 +56,11 @@ export class LearnPlanService {
     return learnPlan;
   }
 
-  async create(createLearnPlanDto: CreateLearnPlanDto): Promise<LearnPlanDto> {
-    const { userId, targetLanguage, level } = createLearnPlanDto;
+  async create(
+    createLearnPlanDto: CreateLearnPlanDto,
+    userId: string,
+  ): Promise<LearnPlanDto> {
+    const { targetLanguage, level } = createLearnPlanDto;
     this.logger.log(
       `Creating learn plan for user: ${userId}, language: ${targetLanguage}, level: ${level}`,
     );

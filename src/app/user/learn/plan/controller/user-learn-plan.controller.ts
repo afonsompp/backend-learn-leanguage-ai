@@ -42,8 +42,7 @@ export class LearnPlansController {
     @Req() req: UserRequest,
     @Body() createLearnPlanDto: CreateLearnPlanDto,
   ): Promise<LearnPlanDto> {
-    createLearnPlanDto.userId = req.user.sub;
-    return this.learnPlansService.create(createLearnPlanDto);
+    return this.learnPlansService.create(createLearnPlanDto, req.user.sub);
   }
 
   @Delete(':id')

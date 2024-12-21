@@ -47,6 +47,17 @@ export class StoryAudioService {
     return { url };
   }
 
+  async deleteStoryAudio(practiceContent: PracticeContent) {
+    this.blobService
+      .deleteObject(this.getAudioKey(practiceContent))
+      .then(() => {
+        this.logger.log('object deleted with success');
+      })
+      .catch(() => {
+        this.logger.log('Error during object exclusion');
+      });
+  }
+
   private getAudioKey(practiceContent: PracticeContent): string {
     const user = practiceContent.practice.learnPlan.user.userId;
     const learnPlan = practiceContent.practice.learnPlan.id;
