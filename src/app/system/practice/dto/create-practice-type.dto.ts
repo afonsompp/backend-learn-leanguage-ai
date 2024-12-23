@@ -13,6 +13,13 @@ export class CreatePracticeTypeDto {
   @IsNotEmpty()
   model: string;
 
+  @IsString()
+  @IsNotEmpty()
+  responseType: string;
+
+  @IsNotEmpty()
+  responseSchema: Record<string, any>;
+
   @IsNumber()
   @IsNotEmpty()
   @Min(0)

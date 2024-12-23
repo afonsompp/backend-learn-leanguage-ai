@@ -10,11 +10,12 @@ import { StoryModule } from '@app/features/story/story.module';
 import { ScopesGuard } from '@core/security/scopes/scopes.guard';
 import { OAuthGuard } from '@core/security/auth/guard/oauth.guard';
 import { HttpClientModule } from '@core/client/http-client.module';
-import { HttpModule } from '@nestjs/axios';
 import { StorageModule } from '@core/storage/storage.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
+    EventEmitterModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [PropertiesConfig],
@@ -24,7 +25,6 @@ import { StorageModule } from '@core/storage/storage.module';
     UserModule,
     AIModule,
     StoryModule,
-    HttpModule,
     HttpClientModule,
     StorageModule,
   ],

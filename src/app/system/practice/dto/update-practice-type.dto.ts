@@ -15,6 +15,13 @@ export class UpdatePracticeTypeDto {
   @Max(1)
   topP: number;
 
+  @IsString()
+  @IsNotEmpty()
+  responseType: string;
+
+  @IsNotEmpty()
+  responseSchema: Record<string, any>;
+
   @IsNumber()
   @IsNotEmpty()
   @Min(0)

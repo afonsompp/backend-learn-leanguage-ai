@@ -7,9 +7,10 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PracticeContent } from '@app/user/practice/entities/practice-content.entity';
-import { PracticeContentDto } from '@app/user/practice/dto/content/practice-content.dto';
-import { CreatePracticeContentDto } from '@app/user/practice/dto/content/create-practice-content.dto';
-import { PracticeService } from '@app/user/practice/service/practice.service';
+import { LearnPlanService } from '@app/user/learn/plan/service/user-learn-plan.service';
+import { CreatePracticeContentDto } from '@app/user/practice/dto/create-practice-content.dto';
+import { PracticeContentDto } from '@app/user/practice/dto/practice-content.dto';
+import { UpdatePracticeContentDto } from '@app/user/practice/dto/update-practice-content.dto';
 
 @Injectable()
 export class PracticeContentService {
@@ -18,30 +19,22 @@ export class PracticeContentService {
   constructor(
     @InjectRepository(PracticeContent)
     private practiceContentRepository: Repository<PracticeContent>,
-    private readonly practiceService: PracticeService,
+    private readonly userLearnPlanService: LearnPlanService,
   ) {}
 
   async create(
     createPracticeContentDto: CreatePracticeContentDto,
     userId: string,
   ): Promise<PracticeContentDto> {
-    const practice = await this.practiceService.findOneById(
-      createPracticeContentDto.practiceId,
+    const learnPlan = await this.userLearnPlanService.findOne(
+      createPracticeContentDto.learnPlanId,
       userId,
     );
 
-    if (practice.learnPlan.user.userId !== userId) {
-      this.logger.error(
-        `User ${userId} tried to access practice ${createPracticeContentDto.practiceId} without permission`,
-      );
-      throw new ForbiddenException(
-        'You do not have permission to access this practice',
-      );
-    }
     this.logger.log(`Creating practice content`);
     const practiceContent = this.practiceContentRepository.create({
       ...createPracticeContentDto,
-      practice,
+      learnPlan,
     });
 
     await this.practiceContentRepository.save(practiceContent);
@@ -49,47 +42,44 @@ export class PracticeContentService {
     return new PracticeContentDto(practiceContent);
   }
 
-  async findAllByPracticeId(
-    practiceId: string,
+  async update(
+    updatePracticeContentDto: UpdatePracticeContentDto,
+    practiceContentId: string,
     userId: string,
-  ): Promise<PracticeContent[]> {
-    this.logger.log(
-      `Fetching practice contents for practiceId ${practiceId} and user ${userId}`,
+  ): Promise<PracticeContentDto> {
+    const practiceContent = await this.findOne(practiceContentId, userId);
+
+    this.logger.log(`Update practice content`);
+
+    practiceContent.audioEventStatus =
+      updatePracticeContentDto.audioEventStatus;
+
+    await this.practiceContentRepository.update(
+      { id: practiceContentId },
+      practiceContent,
     );
-    const practice = await this.practiceService.findOneById(practiceId, userId);
 
-    if (practice.learnPlan.user.userId !== userId) {
-      this.logger.error(
-        `User ${userId} tried to access practice ${practiceId} without permission`,
-      );
-      throw new ForbiddenException(
-        'You do not have permission to access this practice',
-      );
-    }
-
-    return this.practiceContentRepository.find({
-      where: { practice },
-    });
+    this.logger.log(`practice content with id: ${practiceContent.id} updated`);
+    return new PracticeContentDto(practiceContent);
   }
 
-  async findOne(
-    id: string,
-    practiceId: string,
-    userId: string,
-  ): Promise<PracticeContent> {
+  async findOne(id: string, userId: string): Promise<PracticeContent> {
     this.logger.log(`Fetching practice content with id: ${id}`);
-    const practice = await this.practiceService.findOneById(practiceId, userId);
-
     const practiceContent = await this.practiceContentRepository.findOne({
-      where: { id, practice },
-      relations: ['practice'],
+      where: {
+        id,
+        learnPlan: {
+          userId,
+        },
+      },
+      relations: ['learnPlan'],
     });
     if (!practiceContent) {
       this.logger.error(`PracticeContent with id ${id} not found`);
       throw new NotFoundException(`PracticeContent with id ${id} not found`);
     }
 
-    if (practiceContent.practice.learnPlan.user.userId !== userId) {
+    if (practiceContent.learnPlan.userId !== userId) {
       this.logger.error(
         `User ${userId} tried to access practice content ${id} without permission`,
       );
@@ -102,9 +92,9 @@ export class PracticeContentService {
     return practiceContent;
   }
 
-  async remove(id: string, practiceId: string, userId: string): Promise<void> {
+  async remove(id: string, userId: string): Promise<void> {
     this.logger.log(`Deleting practice content with id: ${id}`);
-    await this.findOne(id, practiceId, userId);
+    await this.findOne(id, userId);
     const result = await this.practiceContentRepository.delete(id);
     if (result.affected === 0) {
       this.logger.error(`PracticeContent with id ${id} not found`);

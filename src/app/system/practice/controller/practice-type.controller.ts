@@ -14,7 +14,7 @@ import { UpdatePracticeTypeDto } from '@app/system/practice/dto/update-practice-
 import { PracticeTypeDto } from '@app/system/practice/dto/practice-type.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
-@Controller('practiceTypes')
+@Controller('practice/types')
 @ApiBearerAuth()
 export class PracticeTypeController {
   constructor(private readonly practiceTypeService: PracticeTypeService) {}
@@ -34,7 +34,7 @@ export class PracticeTypeController {
 
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<PracticeTypeDto> {
-    const practiceType = await this.practiceTypeService.findOne(id);
+    const practiceType = await this.practiceTypeService.findOne({ id });
     return new PracticeTypeDto(practiceType);
   }
 

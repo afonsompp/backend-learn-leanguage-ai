@@ -16,4 +16,7 @@ export class AwsConfigService {
   get region(): string {
     return this.configService.get<string>('aws.region');
   }
+  get bucket(): string {
+    return this.configService.get<string>('aws.bucket');
+  }
 }
