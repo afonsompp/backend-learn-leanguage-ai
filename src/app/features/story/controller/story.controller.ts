@@ -19,7 +19,7 @@ import { GetStoryDto } from '@app/features/story/dto/get-story.dto';
 export class StoryController {
   constructor(private readonly storyService: StoryService) {}
 
-  @Post('text')
+  @Post('/text')
   async generateStoryText(
     @Body() generateStoryTextDto: GenerateStoryTextDto,
     @Req() req: UserRequest,

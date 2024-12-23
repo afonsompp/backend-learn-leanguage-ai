@@ -7,10 +7,10 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PracticeContent } from '@app/user/practice/entities/practice-content.entity';
-import { PracticeContentDto } from '@app/user/practice/dto/content/practice-content.dto';
-import { CreatePracticeContentDto } from '@app/user/practice/dto/content/create-practice-content.dto';
-import { PracticeService } from '@app/user/practice/service/practice.service';
-import { UpdatePracticeContentDto } from '@app/user/practice/dto/content/update-practice-content.dto';
+import { LearnPlanService } from '@app/user/learn/plan/service/user-learn-plan.service';
+import { CreatePracticeContentDto } from '@app/user/practice/dto/create-practice-content.dto';
+import { PracticeContentDto } from '@app/user/practice/dto/practice-content.dto';
+import { UpdatePracticeContentDto } from '@app/user/practice/dto/update-practice-content.dto';
 
 @Injectable()
 export class PracticeContentService {
@@ -19,22 +19,22 @@ export class PracticeContentService {
   constructor(
     @InjectRepository(PracticeContent)
     private practiceContentRepository: Repository<PracticeContent>,
-    private readonly practiceService: PracticeService,
+    private readonly userLearnPlanService: LearnPlanService,
   ) {}
 
   async create(
     createPracticeContentDto: CreatePracticeContentDto,
     userId: string,
   ): Promise<PracticeContentDto> {
-    const practice = await this.practiceService.findOneById(
-      createPracticeContentDto.practiceId,
+    const learnPlan = await this.userLearnPlanService.findOne(
+      createPracticeContentDto.learnPlanId,
       userId,
     );
 
     this.logger.log(`Creating practice content`);
     const practiceContent = this.practiceContentRepository.create({
       ...createPracticeContentDto,
-      practice,
+      learnPlan,
     });
 
     await this.practiceContentRepository.save(practiceContent);
@@ -68,22 +68,18 @@ export class PracticeContentService {
     const practiceContent = await this.practiceContentRepository.findOne({
       where: {
         id,
-        practice: {
-          learnPlan: {
-            user: {
-              userId,
-            },
-          },
+        learnPlan: {
+          userId,
         },
       },
-      relations: ['practice', 'practice.learnPlan', 'practice.learnPlan.user'],
+      relations: ['learnPlan'],
     });
     if (!practiceContent) {
       this.logger.error(`PracticeContent with id ${id} not found`);
       throw new NotFoundException(`PracticeContent with id ${id} not found`);
     }
 
-    if (practiceContent.practice.learnPlan.user.userId !== userId) {
+    if (practiceContent.learnPlan.userId !== userId) {
       this.logger.error(
         `User ${userId} tried to access practice content ${id} without permission`,
       );

@@ -5,7 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Practice } from '@app/user/practice/entities/practice.entity';
+import { UserLearnPlan } from '@app/user/learn/plan/entity/user-learn-plan.entity';
 
 @Entity()
 export class PracticeContent {
@@ -21,8 +21,8 @@ export class PracticeContent {
   @Column({ nullable: true })
   totalTokens: number;
 
-  @ManyToOne(() => Practice, (practice) => practice.contentHistory)
-  practice: Practice;
+  @ManyToOne(() => UserLearnPlan)
+  learnPlan: UserLearnPlan;
 
   @Column({ default: 'IN_PROGRESS' })
   audioEventStatus: string;

@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { ProfileModule } from './profile/profile.module';
 import { AuthorizationModule } from '@core/security/auth/authorization.module';
 import { RouterModule } from '@nestjs/core';
 import { PracticeModule } from '@app/user/practice/practice.module';
@@ -8,15 +7,10 @@ import { VocabularyModule } from '@app/user/vocabulary/vocabulary.module';
 
 @Module({
   imports: [
-    ProfileModule,
     PracticeModule,
     LearnPlanModule,
     AuthorizationModule,
     RouterModule.register([
-      {
-        path: 'users',
-        module: ProfileModule,
-      },
       {
         path: 'users',
         module: LearnPlanModule,

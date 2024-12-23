@@ -6,8 +6,6 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { PracticeContentService } from '@app/user/practice/service/practice-content.service';
-import { PracticeService } from '@app/user/practice/service/practice.service';
-import { CreatePracticeContentDto } from '@app/user/practice/dto/content/create-practice-content.dto';
 import { StoryTextService } from '@app/features/story/service/story-text.service';
 import { StoryTextProcessorService } from '@app/features/story/service/story-text-processor.service';
 import { StoryTextPreProcessorService } from '@app/features/story/service/story-text-pre-processor.service';
@@ -15,6 +13,9 @@ import { StoryAudioService } from '@app/features/story/service/story-audio.servi
 import { GenerateStoryTextDto } from '@app/features/story/dto/generate-story-text.dto';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PracticeContent } from '@app/user/practice/entities/practice-content.entity';
+import { LearnPlanService } from '@app/user/learn/plan/service/user-learn-plan.service';
+import { PracticeTypeService } from '@app/system/practice/service/practice-type.service';
+import { CreatePracticeContentDto } from '@app/user/practice/dto/create-practice-content.dto';
 
 @Injectable()
 export class StoryService {
@@ -22,7 +23,8 @@ export class StoryService {
 
   constructor(
     private readonly practiceContentService: PracticeContentService,
-    private readonly practiceService: PracticeService,
+    private readonly practiceTypeService: PracticeTypeService,
+    private readonly userLearnPlanService: LearnPlanService,
     private readonly generateTextService: StoryTextService,
     private readonly storyTextProcessorService: StoryTextProcessorService,
     private readonly storyTextPreProcessorService: StoryTextPreProcessorService,
@@ -31,14 +33,19 @@ export class StoryService {
   ) {}
 
   async createStory(request: GenerateStoryTextDto, userId: string) {
-    const practice = await this.practiceService.findOneById(
-      request.practiceId,
+    const learnPlan = await this.userLearnPlanService.findOne(
+      request.learnPlanId,
       userId,
     );
 
+    const practiceType = await this.practiceTypeService.findOne({
+      name: 'story',
+    });
+
     const generatedStory = await this.generateTextService.generate(
       request,
-      practice,
+      learnPlan,
+      practiceType,
     );
 
     const storyText = JSON.parse(generatedStory.choices[0].message.content);
@@ -46,7 +53,7 @@ export class StoryService {
     const createPracticeContent: CreatePracticeContentDto = {
       input: request.theme,
       output: storyText,
-      practiceId: request.practiceId,
+      learnPlanId: request.learnPlanId,
       totalTokens: generatedStory.usage.total_tokens,
     };
 
@@ -66,7 +73,7 @@ export class StoryService {
 
     const processedText = await this.storyTextProcessorService.processStoryText(
       preProcessedText,
-      practice,
+      learnPlan,
     );
 
     return {
@@ -87,7 +94,7 @@ export class StoryService {
 
     const processedText = await this.storyTextProcessorService.processStoryText(
       preProcessedText,
-      practiceContent.practice,
+      practiceContent.learnPlan,
     );
 
     return {

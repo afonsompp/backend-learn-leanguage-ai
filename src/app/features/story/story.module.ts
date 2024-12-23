@@ -11,6 +11,8 @@ import { StoryTextProcessorService } from '@app/features/story/service/story-tex
 import { StoryTextPreProcessorService } from '@app/features/story/service/story-text-pre-processor.service';
 import { StoryController } from '@app/features/story/controller/story.controller';
 import { GenerateAudioListener } from '@app/features/story/listener/generate-audio.listener';
+import { PracticeDefinitionModule } from '@app/system/practice/practice-definition.module';
+import { LearnPlanModule } from '@app/user/learn/plan/learn-plan.module';
 
 @Module({
   imports: [
@@ -19,6 +21,8 @@ import { GenerateAudioListener } from '@app/features/story/listener/generate-aud
     AIModule,
     VocabularyModule,
     BlobModule,
+    PracticeDefinitionModule,
+    LearnPlanModule,
   ],
   controllers: [StoryController],
   providers: [

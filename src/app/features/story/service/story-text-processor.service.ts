@@ -1,11 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
-
-import { Practice } from '@app/user/practice/entities/practice.entity';
 import { WordService } from '@app/user/vocabulary/service/word.service';
 import {
   ProcessedText,
   SentenceWord,
 } from '@app/features/story/types/sentence.type';
+import { UserLearnPlan } from '@app/user/learn/plan/entity/user-learn-plan.entity';
 
 @Injectable()
 export class StoryTextProcessorService {
@@ -14,14 +13,14 @@ export class StoryTextProcessorService {
   constructor(private readonly wordService: WordService) {}
   async processStoryText(
     text: SentenceWord[],
-    practice: Practice,
+    learnPlan: UserLearnPlan,
   ): Promise<ProcessedText> {
     const allWords = this.getAllWords(text);
 
     const processedWords = await this.wordService.processWords(
       allWords,
-      practice.learnPlan.user.userId,
-      practice.learnPlan.id,
+      learnPlan.userId,
+      learnPlan.id,
     );
 
     return text.map((sentence) => {

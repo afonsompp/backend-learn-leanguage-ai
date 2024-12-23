@@ -21,17 +21,17 @@ export class CreatePracticeContentDto {
 
   @IsString()
   @IsNotEmpty()
-  practiceId: string;
+  learnPlanId: string;
 
   constructor(
     input: string,
     output: object,
     totalTokens: number,
-    practiceId: string,
+    learnPlanId: string,
   ) {
     this.input = input;
     this.output = output;
     this.totalTokens = totalTokens;
-    this.practiceId = practiceId;
+    this.learnPlanId = learnPlanId;
   }
 }

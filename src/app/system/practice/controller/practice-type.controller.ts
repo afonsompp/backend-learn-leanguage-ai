@@ -34,7 +34,7 @@ export class PracticeTypeController {
 
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<PracticeTypeDto> {
-    const practiceType = await this.practiceTypeService.findOne(id);
+    const practiceType = await this.practiceTypeService.findOne({ id });
     return new PracticeTypeDto(practiceType);
   }
 

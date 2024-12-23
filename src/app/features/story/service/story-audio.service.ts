@@ -59,9 +59,9 @@ export class StoryAudioService {
   }
 
   private getAudioKey(practiceContent: PracticeContent): string {
-    const user = practiceContent.practice.learnPlan.user.userId;
-    const learnPlan = practiceContent.practice.learnPlan.id;
-    const practice = practiceContent.practice.id;
+    const user = practiceContent.learnPlan.userId;
+    const learnPlan = practiceContent.learnPlan.id;
+    const practice = practiceContent.id;
     return `user/${user}/learn-plan/${learnPlan}/practice/${practice}/practice-content/${practiceContent.id}.mp3`;
   }
 }

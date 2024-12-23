@@ -10,10 +10,12 @@ export class GenerateStoryTextDto {
   @IsString()
   @IsNotEmpty()
   theme: string;
+
   @IsNumber()
   @IsPositive()
   length: number;
+
   @IsUUID()
   @IsNotEmpty()
-  practiceId: string;
+  learnPlanId: string;
 }

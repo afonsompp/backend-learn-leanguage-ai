@@ -27,16 +27,16 @@ export class PracticeTypeService {
     return practiceTypes;
   }
 
-  async findOne(id: string): Promise<PracticeType> {
-    this.logger.log(`Fetching practice type with id: ${id}`);
+  async findOne(entity: Partial<PracticeType>): Promise<PracticeType> {
+    this.logger.log(`Fetching practice type`);
     const practiceType = await this.practiceTypesRepository.findOne({
-      where: { id },
+      where: entity,
     });
     if (!practiceType) {
-      this.logger.warn(`PracticeType with id ${id} not found`);
-      throw new NotFoundException(`PracticeType with id ${id} not found`);
+      this.logger.warn(`PracticeType not found`);
+      throw new NotFoundException(`PracticeType not found`);
     }
-    this.logger.log(`Found practice type with id: ${id}`);
+    this.logger.log(`Found practice type`);
     return practiceType;
   }
 
@@ -72,7 +72,7 @@ export class PracticeTypeService {
     updatePracticeTypeDto: UpdatePracticeTypeDto,
   ): Promise<PracticeTypeDto> {
     this.logger.log(`Updating practice type with id: ${id}`);
-    const practiceType = await this.findOne(id);
+    const practiceType = await this.findOne({ id });
 
     Object.assign(practiceType, updatePracticeTypeDto);
     const updatedPracticeType =

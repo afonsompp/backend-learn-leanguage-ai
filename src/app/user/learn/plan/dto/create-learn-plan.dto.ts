@@ -6,6 +6,10 @@ export class CreateLearnPlanDto {
   @IsNotEmpty()
   targetLanguage: string;
 
+  @IsString()
+  @IsNotEmpty()
+  nativeLanguage: string;
+
   @IsEnum(LanguageLevel)
   @IsNotEmpty()
   level: LanguageLevel;
